@@ -12,7 +12,7 @@ $v_\parallel$ [m/s]. Orbit `k` is rows `traj_offsets[k]` to
 `config_offsets[i]` to `config_offsets[i+1] - 1`. The file also holds the
 [configuration fields](../data/ideal-mhd.md) (`uuid`, `nfp`, `modB_boozer`,
 `iota`, …) of its configurations, one row per configuration, exactly as in a
-confinement file. See [Trajectory fields](../data/fast-ion.md#trajectory-fields)
+confinement file. See [Trajectory Data](../data/fast-ion.md#trajectory-data)
 for every field.
 
 ## Reading one orbit

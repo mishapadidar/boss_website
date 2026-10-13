@@ -15,8 +15,8 @@ pip install boss-bench
 ## Load a stellarator
 
 There are two types of data files in the BoSS:
-[trajectory files](../data/fast-ion.md#trajectory-fields), containing guiding-center
-trajectory data, and [confinement files](../data/fast-ion.md#particle-fields),
+[trajectory files](../data/fast-ion.md#trajectory-data), containing guiding-center
+trajectory data, and [confinement files](../data/fast-ion.md#confinement-data),
 containing the initial and final states of fast ions. This tutorial will pull
 data from a confinement file, `confinement_data_test_split_00000.hdf5`.
 

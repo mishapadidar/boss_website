@@ -18,10 +18,22 @@ see [Ideal MHD](ideal-mhd.md).
 | **Duration** | Until the particle is lost or $t_\text{max} = 0.1$ s (`t_max`) |
 | **Machine size** | Each configuration is scaled to a randomly chosen reactor size and field strength |
 
-## Particle fields
+## Confinement Data
 
-Stored in the **confinement files**, with one entry per alpha particle
-and 15,000 particles per configuration.
+The **confinement files** hold the start and end state of every traced
+particle: 15,000 alpha particles per configuration, and up to 3,000
+configurations per file, along with the [Ideal MHD](ideal-mhd.md) fields of
+each configuration. They are enough to compute loss fractions, lost energy and
+heat fluxes.
+
+A particle is lost if its confinement time is shorter than the simulation
+time, $t_\text{loss} < t_\text{max}$. Loss quantities are computed over the
+particles born on one surface; for example, the loss fraction of the particles
+born on $s = 0.1$ is `bb.loss_fraction(confinement_time, t_max, s_init, s0=0.1)`
+(see [Particle losses](../package.md#particle-losses)). For a lost particle,
+`zeta_end` and `theta_end` give where it left the plasma; the
+[heat-flux benchmark](../package.md#heat-flux) takes these as its strike point
+on the plasma boundary.
 
 ```{table}
 :class: boss-fields
@@ -30,7 +42,7 @@ and 15,000 particles per configuration.
 | HDF5 name | Symbol | Type | Description |
 | --- | --- | --- | --- |
 | `confinement_time` | $t_\text{loss}$ | array `(15000,)` | Time at which the particle was lost, i.e. reached $s = 0.98$ [s]. Equals `t_max` if it was never lost. |
-| `s_init` | $s_0$ | array `(15000,)` | Birth surface (0.1, 0.25, or 0.5). |
+| `s_init` | $s_0$ | array `(15000,)` | Birth surface, $s_0 \in \{0.1, 0.25, 0.5\}$. |
 | `theta_init` | $\theta_{B,0}$ | array `(15000,)` | Initial Boozer poloidal angle, in $[0, 2\pi)$ [rad]. |
 | `zeta_init` | $\zeta_{B,0}$ | array `(15000,)` | Initial Boozer toroidal angle, in $[0, 2\pi)$ [rad]. |
 | `vpar_init` | $v_{\parallel,0}$ | array `(15000,)` | Initial parallel velocity [m/s]. |
@@ -42,24 +54,21 @@ and 15,000 particles per configuration.
 | `tol` | – | float | Relative and absolute tolerance of the adaptive integrator. |
 ```
 
+## Trajectory Data
 
-A particle is lost if `confinement_time < t_max - 1e-14`. Loss quantities are
-computed over the particles born on one surface, e.g. the loss fraction of the
-particles born on $s = 0.1$ is
-`bb.loss_fraction(confinement_time, t_max, s_init, s0=0.1)` (see
-[Particle losses](../package.md#particle-losses)). For a lost particle,
-`zeta_end` and `theta_end` give where it left the plasma; the
-[heat-flux benchmark](../package.md#heat-flux) takes these as its strike point
-on the plasma boundary.
+The **trajectory files** hold the full guiding-center orbits of 6,000
+particles per configuration, sampled every 1 µs for the first 1 ms, for up to
+40 configurations per file, along with the [Ideal MHD](ideal-mhd.md) fields of
+each configuration. They are meant for work on particle motion itself.
 
-## Trajectory fields
-
-Stored in the **trajectory files**, which hold up to 40 configurations each,
-with 6,000 orbits per configuration. The orbits have different lengths, so they
-are stored in a compressed sparse row (CSR) format: stacked in one array, with
-offsets marking where each orbit starts. Unlike the other fields, `traj_data`,
-`traj_offsets` and `config_offsets` run over the whole file rather than one
-configuration.
+The orbits are stored in a **compressed sparse row (CSR) format**. Orbits have
+different lengths, because a lost particle stops early, so all samples of all
+orbits in a file are stacked in one array, `traj_data`, and two offset arrays
+mark where each orbit and each configuration starts. Unlike the other fields,
+`traj_data`, `traj_offsets` and `config_offsets` run over the whole file
+rather than one configuration. {func}`~boss_bench.trajectory.load_trajectory`
+reads one orbit, and {func}`~boss_bench.trajectory.read_trajectories` all orbits
+of a configuration; see [Loading trajectory data](../tutorials/loading-trajectories.md).
 
 ```{table}
 :class: boss-fields
@@ -74,20 +83,3 @@ configuration.
 | `t_max` | $t_\text{max}$ | float | Maximum simulation time, 1 ms [s]. |
 | `tol` | – | float | Relative and absolute tolerance of the adaptive integrator. |
 ```
-
-
-## Reading an orbit
-
-```python
-import h5py
-
-with h5py.File("trajectory_data_test_split_00000.hdf5", "r") as f:
-    i, j = 0, 5                                    # configuration i, its orbit j
-    k = f["config_offsets"][i] + j
-    a, b = f["traj_offsets"][k], f["traj_offsets"][k + 1]
-    t, s, theta, zeta, vpar = f["traj_data"][a:b].T
-```
-
-{func}`~boss_bench.trajectory.load_trajectory` reads one orbit, and
-{func}`~boss_bench.trajectory.read_trajectories` all orbits of a
-configuration at once; see [Loading trajectory data](../tutorials/loading-trajectories.md).
