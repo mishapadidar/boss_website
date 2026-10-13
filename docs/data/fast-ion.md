@@ -11,11 +11,11 @@ see [Ideal MHD](ideal-mhd.md).
 | --- | --- |
 | **Code** | [CATAPULT](https://arxiv.org/abs/2604.07617), the GPU guiding-center timestepper in [FIRM3D](https://github.com/ColumbiaStellaratorTheory/firm3d) |
 | **Physics** | Collisionless guiding-center motion in Boozer coordinates |
-| **Particles** | 15,000 alpha particles per configuration, 3.5 MeV ($v \approx 1.3 \times 10^{7}$ m/s) |
-| **Birth surfaces** | 5,000 particles on each of $s = 0.1$, $0.25$, and $0.5$ |
+| **Particles** | Alpha particles of 3.5 MeV ($v \approx 1.3 \times 10^{7}$ m/s): 15,000 per configuration in the confinement data, and 6,000 randomly selected per configuration in the trajectory data |
+| **Birth surfaces** | $s = 0.1$, $0.25$ and $0.5$; in the confinement data, 5,000 particles on each |
 | **Birth distribution** | Uniform over the flux surface; isotropic in velocity, so $v_\parallel$ is uniform on $[-v, v]$ |
 | **Loss condition** | The particle reaches $s = 0.98$, just inside the plasma boundary ($s = 1$), where the integrator stops it |
-| **Duration** | Until the particle is lost or $t_\text{max} = 0.1$ s (`t_max`) |
+| **Duration** | Until the particle is lost, or $t_\text{max}$ (`t_max`): 0.1 s in the confinement data and 1 ms in the trajectory data |
 | **Machine size** | Each configuration is scaled to a randomly chosen reactor size and field strength |
 
 ## Confinement Data
