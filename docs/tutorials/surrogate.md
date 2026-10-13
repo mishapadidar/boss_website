@@ -7,7 +7,7 @@ fraction from its shape and profiles, using
 train split and evaluates on a file from the test split.
 
 ```bash
-pip install boss-bench scikit-learn
+pip install scikit-learn
 ```
 
 Download at least one `train` and one `test` confinement file from the
@@ -29,20 +29,19 @@ import numpy as np
 
 import boss_bench as bb
 
-FEATURES = {                                      # field -> number of columns
-    "boundary_xyz": 41 * 41 * 3,                  # boundary points [m]
-    "pressure": 15,                               # pressure profile [Pa]
-    "toroidal_current": 15,                       # toroidal current profile [A]
-    "nfp": 1,                                     # number of field periods
-    "toroidal_flux_edge": 1,                      # toroidal flux at the boundary [Wb]
-}
+FEATURES = [
+    "boundary_xyz",                               # boundary points [m]
+    "pressure",                                   # pressure profile [Pa]
+    "toroidal_current",                           # toroidal current profile [A]
+    "nfp",                                        # number of field periods
+    "toroidal_flux_edge",                         # toroidal flux at the boundary [Wb]
+]
 
 def build_features(path):
-    """(n_stellarators, 5075) feature matrix, columns in FEATURES order."""
-    data = bb.load([path], list(FEATURES))
-    cols = [data[name].astype(np.float64).reshape(len(data[name]), -1)   # scalars become one column
-            for name in FEATURES]
-    return np.concatenate(cols, axis=1)
+    """Feature matrix, one row per stellarator: the FEATURES side by side."""
+    data = bb.load([path], FEATURES)
+    cols = [data[name].reshape(len(data[name]), -1) for name in FEATURES]   # scalars become one column
+    return np.concatenate(cols, axis=1).astype(np.float64)
 ```
 
 ## Targets
