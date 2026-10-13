@@ -22,10 +22,6 @@ Then import it as
 import boss_bench as bb
 ```
 
-Every function is available directly as `bb.<name>`. This page shows how the pieces
-fit together; the pages that follow document each function, with the formula of
-every metric.
-
 ## Loading the data
 
 The package works on local files, so [download the data](download.md) first and put
@@ -51,8 +47,9 @@ described in [Ideal MHD](data/ideal-mhd.md) and
 ## Particle losses
 
 A particle is lost if its confinement time is shorter than the simulation time,
-$t_\text{loss} < t_\text{max} - 10^{-14}$ ({func}`~boss_bench.confinement.is_lost`).
-Each loss quantity is computed over the particles born on one surface $s_0$:
+$t_\text{loss} < t_\text{max}$ ({func}`~boss_bench.confinement.is_lost`). The loss
+metrics, such as the loss fraction and the (normalized) energy loss, are computed over
+the particles born on one surface $s_0$:
 
 ```python
 ct, t_max, s_init = record["confinement_time"], record["t_max"], record["s_init"]
@@ -60,9 +57,6 @@ bb.loss_fraction(ct, t_max, s_init, s0=0.1)           # fraction lost
 bb.energy_loss(ct, t_max, s_init, s0=0.1)             # mean of 3.5 MeV * exp(-2 t_loss / t_max)
 bb.normalized_energy_loss(ct, t_max, s_init, s0=0.1)  # the same, rescaled to [0, 1]
 ```
-
-The particle arrays may also hold many configurations at once, with shape
-`(n_configurations, 15000)`.
 
 ## Benchmarks
 
