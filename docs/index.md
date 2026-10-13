@@ -1,7 +1,17 @@
-# The BoSS: Benchmark of Stellarator Simulations
+# The Benchmark of Stellarator Simulations (BoSS)
 
-**The BoSS** is a growing database of stellarator configurations paired with
-physics simulations.
+[Installation](installation.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
+[Download Data](download.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
+[Data Explorer](data-explorer.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
+
+The Benchmark of Stellarator Simulations (BoSS) is a database of stellarator
+configurations paired with physics simulations. The database contains roughly
+3TB of [Ideal MHD](data/ideal-mhd.md) and [collisionless guiding center](data/fast-ion.md)
+simulations for roughly 180,000 stellarators. The database keeps growing. New
+configurations are added over time, and results from other kinds of simulation
+will be added as new sections. This database can be used to accelerate machine
+learning methods for fusion applications, or improve our understanding of
+fundamental physics.
 
 <figure class="boss-hero-video">
   <video autoplay muted loop playsinline preload="metadata"
@@ -20,29 +30,6 @@ physics simulations.
     v.removeAttribute("autoplay"); v.pause(); v.controls = true;
   }
 </script>
-
-[Installation](installation.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
-[Download Data](download.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
-[Data Explorer](data-explorer.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
-
-## What is the BoSS?
-
-Predicting how a stellarator will perform takes expensive simulations, and
-that cost is what limits both design studies and data-driven methods.
-The BoSS collects stellarator configurations from many sources, runs each one
-through the same pipeline, and publishes both the configurations and their
-simulation results in a consistent, ML-ready format.
-
-The database currently holds data from [Ideal MHD](data/ideal-mhd.md)
-simulations with VMEC, and [collisionless guiding center](data/fast-ion.md)
-simulations from CATAPULT/FIRM3D. The database keeps growing. New configurations are added over time, and
-results from **other kinds of simulation** will be added as new sections.
-
-With the BoSS you can:
-
-- train **surrogate models** that predict simulation outcomes, such as alpha-particle losses, from geometry or equilibrium quantities;
-- study how confinement correlates with **quasi-symmetry, quasi-isodynamicity** and other proxies across very different families of devices;
-- benchmark **generative and inverse-design** methods on physically meaningful targets.
 
 ## Installation
 
