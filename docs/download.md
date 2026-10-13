@@ -15,5 +15,5 @@ or, for large transfers, use **Transfer or Sync to…** to send them to your
 own Globus endpoint (for example a cluster, or your laptop running
 [Globus Connect Personal](https://www.globus.org/globus-connect-personal)).
 
-Once the files are downloaded, the [package](package.md) reads them from the
-download folder.
+Once the files are downloaded, use the [`boss-bench`](package.md) pip package to read and
+plot the data.
