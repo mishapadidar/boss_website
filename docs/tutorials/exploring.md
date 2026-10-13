@@ -95,7 +95,7 @@ bb.plot_modB_boozer(rec, s=0.5)
 for normals and curvature, load the Fourier modes in
 `boundary_full_res_fourier_modes` into a
 [SIMSOPT](https://simsopt.readthedocs.io/) `SurfaceRZFourier`
-([boundary Fourier modes](../data/ideal-mhd.md#boundary-fourier-modes)
+([boundary Fourier modes](../data/ideal-mhd.md#geometry)
 describes the layout):
 
 ```bash
