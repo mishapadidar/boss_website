@@ -1,6 +1,5 @@
 # The BoSS: a benchmark of stellarator simulations
 
-[Installation](installation.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
 [Download Data](download.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
 [Data Explorer](data-explorer.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
 
@@ -35,13 +34,22 @@ physics.
 
 The BoSS comes with a Python package for working with the data: reading the
 files, computing derived quantities such as loss fractions and heat fluxes,
-and evaluating models with the benchmark's metrics. Install it with:
+and evaluating models with the benchmark's metrics. It needs Python 3.9 or
+newer. Install it with:
 
 ```bash
 pip install boss-bench
 ```
 
-See [Installation](installation.md) to install from source.
+### From source
+
+```bash
+git clone https://github.com/mishapadidar/boss_bench.git
+cd boss_bench
+pip install .
+```
+
+See the [package documentation](package.md) for how to use it.
 
 ## Citing the BoSS
 
@@ -85,7 +93,6 @@ We thank the Flatiron Institute’s Scientific Computing Core and the Simons Fou
 :caption: Get Started
 :hidden:
 
-installation
 download
 data-explorer
 ```

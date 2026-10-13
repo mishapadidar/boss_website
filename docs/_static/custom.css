@@ -99,3 +99,10 @@ html[data-theme="dark"] .boss-btn:hover {
 table.boss-sources td:nth-child(3) {
   white-space: nowrap;
 }
+
+/* "From source" under Installation on the home page: a small subheading */
+section#from-source > h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+}
