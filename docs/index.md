@@ -16,12 +16,12 @@ fundamental physics.
 <figure class="boss-hero-video">
   <video autoplay muted loop playsinline preload="metadata"
          poster="_static/video/fast_ion_losses_poster.webp"
-         aria-label="Alpha particles orbiting inside a stellarator; the ones that are lost leave orange marks where they strike the plasma boundary.">
+         aria-label="A burst of 400 alpha particles orbiting inside a stellarator; the ones that are lost leave orange marks where they strike the plasma boundary, and a counter beside it tracks the losses over time.">
     <source src="_static/video/fast_ion_losses.mp4" type="video/mp4">
   </video>
-  <figcaption>Alpha particles followed along their guiding-center orbits in one
-  configuration of the BoSS. Orange marks show where lost particles strike the
-  plasma boundary.</figcaption>
+  <figcaption>A burst of 400 alpha particles followed along their guiding-center
+  orbits in one stellarator configuration. Orange marks show where lost
+  particles strike the plasma boundary.</figcaption>
 </figure>
 <script>
   // no autoplay for readers who ask for reduced motion
