@@ -1,10 +1,12 @@
 # Exploring a stellarator
 
-This tutorial loads one stellarator from a confinement file and looks at its
-main characteristics with the `boss-bench` package: the plasma boundary,
+This tutorial loads one stellarator and plots its main characteristics: the
+plasma boundary,
 $\lvert B \rvert$ on a flux surface, the boundary rebuilt from its Fourier
 modes, its alpha-particle losses, and the heat flux those losses put on the
 plasma boundary.
+
+First install the pip package:
 
 ```bash
 pip install boss-bench
@@ -12,9 +14,14 @@ pip install boss-bench
 
 ## Load a stellarator
 
-Download at least one confinement file of the test split from the
-[Download Data](../download.md) page into a folder, here `BoSS/`. Each file
-holds about 3,000 stellarators, and every field is an HDF5 dataset whose
+There are two types of data files in the BoSS:
+[trajectory files](../data/fast-ion.md#trajectory-fields), containing guiding-center
+trajectory data, and [confinement files](../data/fast-ion.md#particle-fields),
+containing the initial and final states of fast ions. This tutorial will pull
+data from a confinement file, `confinement_data_test_split_00000.hdf5`.
+
+Download this file from the [Download Data](../download.md) page into a
+folder, here `BoSS/`. Each confinement file holds about 3,000 stellarators, and every field is an HDF5 dataset whose
 first axis runs over them, so row `i` of every dataset belongs to stellarator
 `i`.
 
@@ -25,6 +32,7 @@ import numpy as np
 
 import boss_bench as bb
 
+# take the first confinement file of the test split
 path = bb.list_files("BoSS", "confinement", "test")[0]
 f = h5py.File(path, "r")
 print(len(f["uuid"]), "stellarators in", path)
@@ -34,6 +42,7 @@ print(len(f["uuid"]), "stellarators in", path)
 into a dict. Give it the row of the stellarator, or its `uuid`:
 
 ```python
+# read every field of stellarator 0 into a dict
 rec = bb.load_record(f, 0)
 nfp = int(rec["nfp"])
 print(rec["uuid"], "| source:", rec["source_dataset"], "| nfp =", nfp,
@@ -83,52 +92,35 @@ bb.plot_modB_boozer(rec, s=0.5)
 ## The boundary from its Fourier modes
 
 `boundary_xyz` is sampled on a fixed 41 × 41 grid. For a finer surface, or
-for normals and curvature, evaluate the Fourier series in
-`boundary_full_res_fourier_modes` at any resolution
+for normals and curvature, load the Fourier modes in
+`boundary_full_res_fourier_modes` into a
+[SIMSOPT](https://simsopt.readthedocs.io/) `SurfaceRZFourier`
 ([boundary Fourier modes](../data/ideal-mhd.md#boundary-fourier-modes)
-describes the layout). With NumPy alone:
+describes the layout):
 
-```python
-def boundary_from_modes(modes, nfp, phi, theta, mpol=20, ntor=20):
-    """Evaluate a stellarator-symmetric SurfaceRZFourier at angles in turns.
-
-    phi, theta: 1-D arrays in units of full turns (as in boundary_quadpoints_*).
-    Returns an array of shape (len(phi), len(theta), 3).
-    """
-    m_rc = np.r_[np.zeros(ntor + 1), np.repeat(np.arange(1, mpol + 1), 2 * ntor + 1)]
-    n_rc = np.r_[np.arange(ntor + 1), np.tile(np.arange(-ntor, ntor + 1), mpol)]
-    m_zs, n_zs = m_rc[1:], n_rc[1:]            # Z has no (m, n) = (0, 0) term
-    rc, zs = modes[: len(m_rc)], modes[len(m_rc):]
-
-    P, T = np.meshgrid(2 * np.pi * phi, 2 * np.pi * theta, indexing="ij")
-    ang_r = m_rc * T[..., None] - n_rc * nfp * P[..., None]
-    ang_z = m_zs * T[..., None] - n_zs * nfp * P[..., None]
-    R = np.cos(ang_r) @ rc
-    Z = np.sin(ang_z) @ zs
-    return np.stack([R * np.cos(P), R * np.sin(P), Z], axis=-1)
-
-modes = rec["boundary_full_res_fourier_modes"]
-
-# on the stored grid it reproduces boundary_xyz to round-off
-xyz = boundary_from_modes(modes, nfp, rec["boundary_quadpoints_phi"], rec["boundary_quadpoints_theta"])
-print("max |difference| from boundary_xyz:", np.abs(xyz - boundary).max())
-
-# a fine grid over the full torus
-fine = boundary_from_modes(modes, nfp, np.linspace(0, 1, 200), np.linspace(0, 1, 64))
+```bash
+pip install simsopt
 ```
 
-:::{dropdown} With SIMSOPT instead
 ```python
 from simsopt.geo import SurfaceRZFourier
 
-s = SurfaceRZFourier(nfp=nfp, stellsym=True, mpol=20, ntor=20,
-                     quadpoints_phi=np.linspace(0, 1, 200, endpoint=False),
-                     quadpoints_theta=np.linspace(0, 1, 64, endpoint=False))
-s.x = modes
-xyz = s.gamma()            # (200, 64, 3)
-normals = s.unitnormal()
+def boundary_surface(rec, phi, theta):
+    """The plasma boundary as a SIMSOPT surface, at angles phi and theta in turns."""
+    surface = SurfaceRZFourier(nfp=int(rec["nfp"]), stellsym=True, mpol=20, ntor=20,
+                               quadpoints_phi=phi, quadpoints_theta=theta)
+    surface.x = rec["boundary_full_res_fourier_modes"]
+    return surface
+
+# on the stored grid it reproduces boundary_xyz
+surface = boundary_surface(rec, rec["boundary_quadpoints_phi"], rec["boundary_quadpoints_theta"])
+print("max |difference| from boundary_xyz:", np.abs(surface.gamma() - boundary).max())
+
+# a fine grid over the full torus
+fine = boundary_surface(rec, np.linspace(0, 1, 200, endpoint=False), np.linspace(0, 1, 64, endpoint=False))
+xyz = fine.gamma()            # (200, 64, 3) points on the boundary
+normals = fine.unitnormal()   # (200, 64, 3) unit normals
 ```
-:::
 
 ## Alpha-particle losses
 
@@ -138,6 +130,7 @@ surfaces $s_0 = 0.1$, $0.25$ and $0.5$. A particle is lost if its
 quantities are computed over the particles born on one surface:
 
 ```python
+# per particle: time it was lost (t_max if never lost) and its birth surface
 ct, t_max, s_init = rec["confinement_time"], rec["t_max"], rec["s_init"]
 for s0 in (0.1, 0.25, 0.5):
     print(f"born on s = {s0}: "
@@ -157,33 +150,15 @@ bb.plot_loss_fraction_curves(rec)
 :width: 440px
 ```
 
-Where were the lost particles born? Plot their initial Boozer angles:
-
-```python
-lost = bb.is_lost(ct, t_max)
-fig, ax = plt.subplots(figsize=(5.5, 3.5))
-ax.scatter(rec["zeta_init"][~lost], rec["theta_init"][~lost], s=1, c="lightgray", label="confined")
-ax.scatter(rec["zeta_init"][lost], rec["theta_init"][lost], s=1, c="C3", label="lost")
-ax.set_xlabel(r"initial Boozer toroidal angle $\zeta_0$")
-ax.set_ylabel(r"initial Boozer poloidal angle $\theta_0$")
-ax.legend(markerscale=8, loc="upper right")
-fig.tight_layout()
-```
-
-```{figure} ../_static/tutorials/birth_points.png
-:alt: Birth positions of lost and confined particles in Boozer angles
-:width: 480px
-```
-
 ## Heat flux on the plasma boundary
 
 Lost particles strike the plasma boundary at their final Boozer angles
 `zeta_end` ($\zeta_B$) and `theta_end` ($\theta_B$).
 {func}`~boss_bench.heat_flux.lost_particles` returns the strike points of the
 particles born on one surface, and their energies. A particle lost at time
-$t_\text{loss}$ carries
-$E = 3.5\,\text{MeV} \cdot e^{-2 t_\text{loss} / t_\text{max}}$, a weight that
-models slowing down (the tracing itself conserves energy):
+$t_\text{loss}$ carries the energy
+$E = 3.5\,\text{MeV} \cdot e^{-2 t_\text{loss} / \tau_s}$, where $\tau_s$ is the
+slowing-down time, which we approximate by $t_\text{max} = 0.1$ s:
 
 ```python
 zeta, theta, energy, n_launched = bb.lost_particles(rec, s0=0.1)
@@ -201,36 +176,39 @@ print(Q.shape, f"peak {Q.max():.3g} MeV/m^2 per particle")    # (zeta bin, theta
 ```
 
 To get W/m², multiply $Q$ by an alpha birth rate (particles per second) and
-by $1.602 \times 10^{-13}$ J/MeV.
-
-{func}`~boss_bench.plotting.plot_strike_points` and
-{func}`~boss_bench.plotting.plot_heat_flux` draw the strike points and the
-heat flux for each birth surface:
+by $1.602 \times 10^{-13}$ J/MeV. Here is the heat flux of the particles born
+on each surface, on one color scale:
 
 ```python
-bb.plot_strike_points(rec)
-bb.plot_heat_flux(rec)
-```
+period = 2 * np.pi / nfp
+Qs = {s0: bb.binned_heat_flux(*bb.lost_particles(rec, s0), rec, resolution=32)
+      for s0 in (0.1, 0.25, 0.5)}
 
-```{figure} ../_static/tutorials/strike_points.png
-:alt: Strike points of the lost particles colored by energy, and their density, for each birth surface
-:width: 640px
+fig, axs = plt.subplots(1, 3, figsize=(12, 3.2), sharey=True, constrained_layout=True)
+for ax, (s0, Q) in zip(axs, Qs.items()):
+    mesh = ax.pcolormesh(np.linspace(0, period, 33), np.linspace(0, 2 * np.pi, 33), Q.T,
+                         cmap="YlOrRd", vmin=0, vmax=max(q.max() for q in Qs.values()))
+    ax.set_title(f"born on $s_0$ = {s0}")
+    ax.set_xlabel(r"Boozer $\zeta$ (one field period)")
+axs[0].set_ylabel(r"Boozer $\theta$")
+fig.colorbar(mesh, ax=axs, label="MeV / m$^2$ per particle")
 ```
 
 ```{figure} ../_static/tutorials/heat_flux.png
 :alt: Heat flux of lost alpha particles on the plasma boundary over one field period, for each birth surface
-:width: 400px
 ```
 
-Both functions also take predicted strike points and draw them next to the
-truth. Predicting them is the heat-flux benchmark; see
-[Heat flux](../package.md#heat-flux).
+We can also plot where the lost particles strike the boundary, colored by
+their energy, and the density of the strike points, with
+{func}`~boss_bench.plotting.plot_strike_points`:
 
 ```python
-f.close()
+bb.plot_strike_points(rec)
 ```
 
-The figures on this page are the output for stellarator 0 of
-`confinement_data_test_split_00000.hdf5`.
+```{figure} ../_static/tutorials/strike_points.png
+:alt: Strike points of the lost particles colored by energy, and their density, for each birth surface
+:width: 560px
+```
 
 Next: [Loading trajectory data →](loading-trajectories.md)
