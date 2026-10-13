@@ -109,6 +109,8 @@ html_theme_options = {
     # header
     "use_download_button": False,
     "use_fullscreen_button": True,
+    # GitHub link with star and fork counts, before the header buttons
+    "article_header_end": ["repo-stats.html", "article-header-buttons.html"],
     # left sidebar: pages expand into their sections (see _templates/)
     "show_navbar_depth": 1,
     "home_page_in_toc": False,

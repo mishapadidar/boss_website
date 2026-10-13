@@ -39,7 +39,8 @@ docs/
   _static/overview/      histograms on the database overview (scripts/make_overview_figures.py)
   _static/custom.css     logo tile in dark mode, prev/next buttons, home-page video, stat tiles
   _static/logo/          stellarator image from the ARTEMISS logo
-  _templates/            sidebar template: pages expand into their sections
+  _templates/            sidebar template (pages expand into their sections), GitHub link
+                         with star and fork counts in the header (repo-stats.html)
 icons/                   old ARTEMISS logo files (not used by the site)
 legacy_mkdocs/           the previous MkDocs Material version, kept for reference
 scripts/                 regenerate the database numbers and figures (see below)

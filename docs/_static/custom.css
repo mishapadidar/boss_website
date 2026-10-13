@@ -125,3 +125,40 @@ table.boss-fields td:nth-child(3) code,
 table.boss-fields td:nth-child(3) code span.pre {
   overflow-wrap: normal;
 }
+
+/* GitHub link with star and fork counts in the header (_templates/repo-stats.html) */
+.boss-repo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.75rem;
+  color: var(--pst-color-text-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+.boss-repo:hover {
+  color: var(--pst-color-text-base);
+}
+.boss-repo .fa-github {
+  font-size: 1.4rem;
+}
+.boss-repo-text {
+  display: flex;
+  flex-direction: column;
+}
+.boss-repo-name {
+  font-weight: 600;
+}
+.boss-repo-stats {
+  display: flex;
+  gap: 0.6rem;
+}
+.boss-repo-stats[hidden] {
+  display: none;
+}
+@media (max-width: 576px) {
+  .boss-repo-text {
+    display: none;
+  }
+}

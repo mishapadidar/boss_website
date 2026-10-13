@@ -1,0 +1,35 @@
+{# GitHub link with star and fork counts, at the top right of every page (see conf.py). #}
+<a class="boss-repo" href="https://github.com/mishapadidar/boss_bench" title="boss-bench on GitHub">
+  <i class="fa-brands fa-github" aria-hidden="true"></i>
+  <span class="boss-repo-text">
+    <span class="boss-repo-name">boss_bench</span>
+    <span class="boss-repo-stats" hidden>
+      <span title="Stars"><i class="fa-solid fa-star" aria-hidden="true"></i> <span data-stat="stars"></span></span>
+      <span title="Forks"><i class="fa-solid fa-code-fork" aria-hidden="true"></i> <span data-stat="forks"></span></span>
+    </span>
+  </span>
+</a>
+<script>
+  // Counts come from the GitHub API, cached for an hour; without them the link still works.
+  (() => {
+    const repo = "mishapadidar/boss_bench", key = "boss-repo-stats";
+    const show = (d) => document.querySelectorAll(".boss-repo-stats").forEach((el) => {
+      el.querySelector('[data-stat="stars"]').textContent = d.stars;
+      el.querySelector('[data-stat="forks"]').textContent = d.forks;
+      el.hidden = false;
+    });
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(key));
+      if (cached && Date.now() - cached.time < 3600e3) return show(cached);
+    } catch (e) {}
+    fetch(`https://api.github.com/repos/${repo}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (!j) return;
+        const d = { stars: j.stargazers_count, forks: j.forks_count, time: Date.now() };
+        try { sessionStorage.setItem(key, JSON.stringify(d)); } catch (e) {}
+        show(d);
+      })
+      .catch(() => {});
+  })();
+</script>
