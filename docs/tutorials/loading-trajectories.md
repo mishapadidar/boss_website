@@ -84,7 +84,7 @@ configuration at once. `traj_data` is stored in chunks that run down each
 column, so this one contiguous read is much faster than reading orbits one at
 a time. It returns the samples of every orbit on the same time axis, row `k`
 being the sample $k$ µs after the first, in the embedded form that the
-[trajectory benchmark](../package.md#trajectories) uses,
+[trajectory benchmark](../package.md#benchmarks) uses,
 
 $$
 z = \left(\sqrt{s}\cos\theta,\ \sqrt{s}\sin\theta,\ \cos\varphi,\ \sin\varphi,\ v_\parallel / v_\alpha\right),
@@ -121,7 +121,7 @@ print(f"lost before their first sample: {np.sum(orbits['n_valid'] == 0)}")
 
 ## Plotting rollouts
 
-The [trajectory benchmark](../package.md#trajectories) asks a model to predict
+The [trajectory benchmark](../package.md#benchmarks) asks a model to predict
 $z$ from the first sample of an orbit. {func}`~boss_bench.plotting.plot_rollouts`
 draws true orbits against predicted ones, one row per orbit and one column per
 channel of $z$. Here the "model" predicts that every particle stays at its

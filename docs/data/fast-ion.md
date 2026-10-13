@@ -30,9 +30,9 @@ A particle is lost if its confinement time is shorter than the simulation
 time, $t_\text{loss} < t_\text{max}$. Loss quantities are computed over the
 particles born on one surface; for example, the loss fraction of the particles
 born on $s = 0.1$ is `bb.loss_fraction(confinement_time, t_max, s_init, s0=0.1)`
-(see [Particle losses](../package.md#particle-losses)). For a lost particle,
+(see {func}`~boss_bench.confinement.loss_fraction`). For a lost particle,
 `zeta_end` and `theta_end` give where it left the plasma; the
-[heat-flux benchmark](../package.md#heat-flux) takes these as its strike point
+[heat-flux benchmark](../package.md#benchmarks) takes these as its strike point
 on the plasma boundary.
 
 ```{table}

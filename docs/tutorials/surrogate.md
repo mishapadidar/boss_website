@@ -143,4 +143,4 @@ Output for one train file and one test file (about 3,000 stellarators each).
 - **More data.** One file holds about 3,000 stellarators; the full train
   split holds about 154,000.
 - **The benchmark.** The surrogate benchmark scores predictions on every
-  stellarator of the test split; see [Surrogate models](../package.md#surrogate-models).
+  stellarator of the test split; see [Benchmarks](../package.md#benchmarks).
