@@ -27,33 +27,35 @@ The package works on local files, so [download the data](download.md) first.
 ## What's in the package
 
 Each module has its own page, with every function and the formula of every metric.
-The most useful functions are:
 
-- {mod}`boss_bench.data`: find and read the data files, with
-  {func}`~boss_bench.data.list_files`, {func}`~boss_bench.data.load_record` (one
-  configuration) and {func}`~boss_bench.data.load` (chosen fields of many).
-- {mod}`boss_bench.confinement`: alpha-particle losses of the particles born on one
-  surface, with {func}`~boss_bench.confinement.loss_fraction`,
-  {func}`~boss_bench.confinement.energy_loss` and
-  {func}`~boss_bench.confinement.normalized_energy_loss`.
-- {mod}`boss_bench.heat_flux`: where lost particles strike the plasma boundary, with
-  {func}`~boss_bench.heat_flux.lost_particles` and
-  {func}`~boss_bench.heat_flux.binned_heat_flux`, and the heat-flux benchmark,
-  {func}`~boss_bench.heat_flux.heat_flux_metrics`.
-- {mod}`boss_bench.trajectory`: orbits, with
-  {func}`~boss_bench.trajectory.load_trajectory` (one orbit),
-  {func}`~boss_bench.trajectory.read_trajectories` (all orbits of a configuration) and
-  {func}`~boss_bench.trajectory.to_xyz` (Cartesian positions), and the trajectory
-  benchmark, {func}`~boss_bench.trajectory.trajectory_metrics`.
-- {mod}`boss_bench.design`: the inverse-design benchmark,
+{mod}`boss_bench.data`
+: Finds the downloaded files and reads them: one configuration at a time with
+  {func}`~boss_bench.data.load_record`, or chosen fields of many configurations at
+  once.
+
+{mod}`boss_bench.confinement`
+: Computes the loss metrics of the particles born on one surface: the loss fraction,
+  the energy loss and its normalized form, and the mean confinement time, e.g.
+  {func}`~boss_bench.confinement.loss_fraction`.
+
+{mod}`boss_bench.heat_flux`
+: Finds where lost particles strike the plasma boundary and turns their energy into a
+  heat flux on the boundary. It also scores predictions for the heat-flux benchmark,
+  with {func}`~boss_bench.heat_flux.heat_flux_metrics`.
+
+{mod}`boss_bench.trajectory`
+: Provides convenience functions to load trajectory data for one particle or one
+  device, and to convert orbits to Cartesian coordinates. It also computes the
+  prediction-error metrics of the trajectory benchmark, with
+  {func}`~boss_bench.trajectory.trajectory_metrics`.
+
+{mod}`boss_bench.design`
+: Scores generated designs for the inverse-design benchmark, with
   {func}`~boss_bench.design.design_metrics`.
-- {mod}`boss_bench.plotting`: plots of a configuration
-  ({func}`~boss_bench.plotting.plot_device`,
-  {func}`~boss_bench.plotting.plot_modB_boozer`), its losses
-  ({func}`~boss_bench.plotting.plot_loss_fraction_curves`,
-  {func}`~boss_bench.plotting.plot_heat_flux`,
-  {func}`~boss_bench.plotting.plot_strike_points`) and its orbits
-  ({func}`~boss_bench.plotting.plot_rollouts`).
+
+{mod}`boss_bench.plotting`
+: Plots a configuration, its particle losses and heat flux, and its orbits, alone or
+  next to a model's predictions.
 
 ## Benchmarks
 
