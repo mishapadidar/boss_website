@@ -105,7 +105,7 @@ files contain full trajectories.
 
 The confinement files (325 GB in all) are enough to compute loss fractions
 and heat fluxes. The trajectory files (2.9 TB) hold 134 million orbits for
-22,307 of the configurations, for work on particle motion itself. See
+22,307 of the configurations. See
 [Download Data](../download.md) to download the data.
 
 ## Train/test split
