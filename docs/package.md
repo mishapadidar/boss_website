@@ -122,7 +122,7 @@ A predicted particle is lost at the first time its predicted $s \ge 0.98$, and i
 predicted state is held at the loss state afterwards. Orbits lost before their first
 sample are not scored. {func}`~boss_bench.trajectory.trajectory_metrics` reports the
 normalized RMSE of the states at each lead time
-({func}`~boss_bench.trajectory.nrmse`), the mean absolute error of the fraction lost
+({func}`~boss_bench.trajectory.nrmse`), with its breakdown by channel group, the mean absolute error of the fraction lost
 within 1 ms ({func}`~boss_bench.trajectory.loss_fraction_mae`), and the
 Wasserstein-1 distance of the confinement times
 ({func}`~boss_bench.trajectory.confinement_time_w1`).
