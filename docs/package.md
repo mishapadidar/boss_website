@@ -2,11 +2,21 @@
 
 `boss-bench` is the Python package of the BoSS. It loads the data and computes the
 benchmark metrics exactly as they are defined in the paper. It depends only on NumPy,
-SciPy, h5py and Matplotlib.
+SciPy, h5py and Matplotlib, and needs Python 3.9 or newer. Install it with
 
 ```bash
 pip install boss-bench
 ```
+
+or from source:
+
+```bash
+git clone https://github.com/mishapadidar/boss_bench.git
+cd boss_bench
+pip install .
+```
+
+Then import it as
 
 ```python
 import boss_bench as bb
