@@ -176,25 +176,16 @@ print(Q.shape, f"peak {Q.max():.3g} MeV/m^2 per particle")    # (zeta bin, theta
 ```
 
 To get W/m², multiply $Q$ by an alpha birth rate (particles per second) and
-by $1.602 \times 10^{-13}$ J/MeV. Here is the heat flux of the particles born
-on each surface, on one color scale:
+by $1.602 \times 10^{-13}$ J/MeV.
+
+{func}`~boss_bench.plotting.plot_heat_flux` draws the heat flux of the
+particles born on each surface:
 
 ```python
-period = 2 * np.pi / nfp
-Qs = {s0: bb.binned_heat_flux(*bb.lost_particles(rec, s0), rec, resolution=32)
-      for s0 in (0.1, 0.25, 0.5)}
-
-fig, axs = plt.subplots(1, 3, figsize=(12, 3.2), sharey=True, constrained_layout=True)
-for ax, (s0, Q) in zip(axs, Qs.items()):
-    mesh = ax.pcolormesh(np.linspace(0, period, 33), np.linspace(0, 2 * np.pi, 33), Q.T,
-                         cmap="YlOrRd", vmin=0, vmax=max(q.max() for q in Qs.values()))
-    ax.set_title(f"born on $s_0$ = {s0}")
-    ax.set_xlabel(r"Boozer $\zeta$ (one field period)")
-axs[0].set_ylabel(r"Boozer $\theta$")
-fig.colorbar(mesh, ax=axs, label="MeV / m$^2$ per particle")
+bb.plot_heat_flux(rec)
 ```
 
-```{figure} ../_static/tutorials/heat_flux.png
+```{figure} ../_static/tutorials/heat_flux_by_surface.png
 :alt: Heat flux of lost alpha particles on the plasma boundary over one field period, for each birth surface
 ```
 
@@ -206,9 +197,8 @@ their energy, and the density of the strike points, with
 bb.plot_strike_points(rec)
 ```
 
-```{figure} ../_static/tutorials/strike_points.png
+```{figure} ../_static/tutorials/strike_points_by_surface.png
 :alt: Strike points of the lost particles colored by energy, and their density, for each birth surface
-:width: 560px
 ```
 
 Next: [Loading trajectory data →](loading-trajectories.md)
