@@ -5,13 +5,13 @@
 [Data Explorer](data-explorer.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
 
 The Benchmark of Stellarator Simulations (BoSS) is a database of stellarator
-configurations paired with physics simulations. The database contains roughly
-3TB of [Ideal MHD](data/ideal-mhd.md) and [collisionless guiding center](data/fast-ion.md)
-simulations for roughly 180,000 stellarators. The database keeps growing. New
+configurations paired with physics simulations. It holds about 3 TB of data from
+[ideal MHD](data/ideal-mhd.md) and [collisionless guiding-center](data/fast-ion.md)
+simulations of roughly 180,000 stellarators. The database keeps growing: new
 configurations are added over time, and results from other kinds of simulation
-will be added as new sections. This database can be used to accelerate machine
-learning methods for fusion applications, or improve our understanding of
-fundamental physics.
+will be added as new sections. It can be used to develop machine-learning methods
+for fusion applications, or to improve our understanding of the underlying
+physics.
 
 <figure class="boss-hero-video">
   <video autoplay muted loop playsinline preload="metadata"
@@ -35,7 +35,7 @@ fundamental physics.
 
 The BoSS comes with a Python package for working with the data: reading the
 files, computing derived quantities such as loss fractions and heat fluxes,
-and evaluating models with the benchmark's metrics. Install it with
+and evaluating models with the benchmark's metrics. Install it with:
 
 ```bash
 pip install boss-bench
@@ -51,7 +51,7 @@ If you find this project useful for your research, please consider citing:
   simulations.* 2026. [doi:XX.XXXXX/XXXXX](https://doi.org/XX.XXXXX/XXXXX),
   [arXiv:XXXX.XXXXX](https://arxiv.org/abs/XXXX.XXXXX).
 
-The corresponding BibTeX entry is given hereunder.
+The BibTeX entry is below.
 
 ```bibtex
 @unpublished{boss,
@@ -65,6 +65,8 @@ The corresponding BibTeX entry is given hereunder.
 }
 ```
 
+## License
+
 The data is released under the
 [Creative Commons Attribution 4.0 International (CC BY 4.0) license](https://creativecommons.org/licenses/by/4.0/).
 
@@ -73,7 +75,7 @@ The data is released under the
 For questions regarding this project, please contact
 [Misha Padidar](https://mishapadidar.com/).
 
-## Acknowledgements
+## Acknowledgments
 
 We thank the Flatiron Institute’s Scientific Computing Core and the Simons Foundation.
 
