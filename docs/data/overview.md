@@ -87,12 +87,7 @@ non-vacuum devices, and the number of field periods.
 Many devices deviate strongly from quasi-symmetry, although a large share come
 from QUASR, a database of devices optimized for quasi-symmetry. About a third of
 the devices have finite pressure, with $\langle\beta\rangle$ up to about 6%;
-most of them are above the reactor-grade value of 1%. The mean rotational
-transform is negative for about a fifth of the devices. Each configuration is
-scaled to a randomly chosen machine size (major radius of about 1–31 m) and field
-strength (volume-averaged $B$ of 4–11 T). The histograms leave out 11
-configurations with aspect ratio above 13, 590 with a mean rotational transform
-outside $[-1.5, 2]$, and one with $n_\text{fp} = 12$.
+most of them are above the reactor-grade value of 1%.
 
 ## Files
 
