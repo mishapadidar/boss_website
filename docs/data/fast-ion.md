@@ -48,7 +48,7 @@ on the plasma boundary.
 
 ## Trajectory fields
 
-Stored in the **trajectory files**, which hold 40 configurations each, with 6,000 orbits per
+Stored in the **trajectory files**, which hold up to 40 configurations each, with 6,000 orbits per
 configuration. The orbits are stored stacked in one array, and offsets mark
 where each orbit starts.
 
@@ -71,5 +71,6 @@ with h5py.File("trajectory_data_test_split_00000.hdf5", "r") as f:
     t, s, theta, zeta, vpar = f["traj_data"][a:b].T
 ```
 
-{func}`~boss_bench.trajectory.read_trajectories` reads all orbits of a
+{func}`~boss_bench.trajectory.load_trajectory` reads one orbit, and
+{func}`~boss_bench.trajectory.read_trajectories` all orbits of a
 configuration at once; see [Loading trajectory data](../tutorials/loading-trajectories.md).

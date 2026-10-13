@@ -108,7 +108,9 @@ z = \left(\sqrt{s}\cos\theta,\ \sqrt{s}\sin\theta,\ \cos\varphi,\ \sin\varphi,\ 
 $$
 
 and {func}`~boss_bench.trajectory.read_trajectories` reads the orbits of a
-configuration in this form.
+configuration in this form. {func}`~boss_bench.trajectory.load_trajectory` reads a
+single orbit as it is stored. {func}`~boss_bench.trajectory.to_xyz` converts points in Boozer
+coordinates, such as the samples of an orbit, to Cartesian positions.
 
 ```python
 paths = bb.list_files("BoSS", "trajectory", "test")

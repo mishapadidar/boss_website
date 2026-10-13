@@ -69,7 +69,7 @@ bb.plot_device(rec)
 
 ```{figure} ../_static/tutorials/boundary_3d.png
 :alt: The plasma boundary seen from above, colored by the magnitude of B
-:width: 420px
+:width: 336px
 ```
 
 ## |B| on a flux surface
@@ -86,7 +86,7 @@ bb.plot_modB_boozer(rec, s=0.5)
 
 ```{figure} ../_static/tutorials/modB.png
 :alt: Magnitude of B on the s = 0.5 flux surface, in Boozer angles
-:width: 480px
+:width: 384px
 ```
 
 ## The boundary from its Fourier modes
