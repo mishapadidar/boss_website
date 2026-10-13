@@ -1,0 +1,214 @@
+/* ---------- Brand colors ----------
+   navy #042c66, teal #01b49e, yellow #fcee21 (carried over until BoSS has its
+   own logo). */
+:root {
+  --boss-navy: #042c66;
+  --boss-teal: #01b49e;
+  --boss-yellow: #fcee21;
+}
+
+:root,
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #042c66;
+  --md-primary-fg-color--light: #1b4a8f;
+  --md-primary-fg-color--dark: #021c42;
+  --md-accent-fg-color: #008f7d;
+  --md-accent-fg-color--transparent: rgba(1, 180, 158, 0.1);
+  --md-typeset-a-color: #0b5cad;
+  --boss-card-border: rgba(4, 44, 102, 0.16);
+  --boss-stat-color: #042c66;
+  --boss-hero-bg:
+    radial-gradient(50rem 24rem at 110% -20%, rgba(1, 180, 158, 0.12), transparent 60%),
+    radial-gradient(36rem 18rem at -10% 120%, rgba(252, 238, 33, 0.14), transparent 60%),
+    #ffffff;
+  --boss-hero-border: rgba(4, 44, 102, 0.12);
+  --boss-hero-fg: #042c66;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #042c66;
+  --md-primary-fg-color--light: #1b4a8f;
+  --md-primary-fg-color--dark: #021c42;
+  --md-accent-fg-color: #2fd6bf;
+  --md-accent-fg-color--transparent: rgba(47, 214, 191, 0.1);
+  --md-typeset-a-color: #5fc8ff;
+  --md-default-bg-color: #0c1424;
+  --boss-card-border: rgba(95, 200, 255, 0.2);
+  --boss-stat-color: #5fe0cc;
+  --boss-hero-bg:
+    radial-gradient(50rem 24rem at 110% -20%, rgba(1, 180, 158, 0.18), transparent 60%),
+    radial-gradient(36rem 18rem at -10% 120%, rgba(252, 238, 33, 0.08), transparent 60%),
+    #0f1d36;
+  --boss-hero-border: rgba(95, 200, 255, 0.18);
+  --boss-hero-fg: #e6edf7;
+}
+
+/* ---------- Header ---------- */
+.md-header__button.md-logo .md-icon svg,
+.md-header__button.md-logo svg {
+  fill: var(--boss-yellow);
+}
+
+.md-header__title {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Sidebar (DeepHyper-style table of contents) ----------
+   Top-level groups read as captions; their pages are always listed under them. */
+@media screen and (min-width: 76.25em) {
+  .md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav__link {
+    color: var(--md-default-fg-color--light);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 1.1em;
+  }
+
+  .md-nav--primary > .md-nav__list > .md-nav__item--section:first-child > .md-nav__link {
+    margin-top: 0;
+  }
+
+  .md-nav--primary .md-nav__item--section > .md-nav > .md-nav__list {
+    border-left: 1px solid var(--boss-card-border);
+    margin-left: 0.1rem;
+  }
+
+  .md-nav--primary .md-nav__link--active {
+    font-weight: 700;
+  }
+}
+
+/* ---------- Home page hero ---------- */
+.boss-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--boss-hero-bg);
+  color: var(--boss-hero-fg);
+  border: 1px solid var(--boss-hero-border);
+  border-radius: 0.6rem;
+  padding: 1.8rem 1.8rem 1.6rem;
+  margin: 0 0 1.6rem;
+}
+
+/* thin brand-gradient rule along the bottom edge */
+.boss-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--boss-teal), var(--boss-yellow));
+}
+
+.md-typeset .boss-hero h1 {
+  color: inherit;
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0 0 0.3rem;
+}
+
+.boss-hero .subtitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  opacity: 0.85;
+}
+
+.boss-hero .tagline {
+  font-size: 0.9rem;
+  max-width: 40rem;
+  margin: 0 0 1.2rem;
+}
+
+.md-typeset .boss-hero .md-button {
+  color: inherit;
+  border-color: currentColor;
+  margin: 0.2rem 0.4rem 0.2rem 0;
+}
+
+.md-typeset .boss-hero .md-button--primary {
+  background: var(--boss-navy);
+  border-color: var(--boss-navy);
+  color: #ffffff;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .boss-hero .md-button--primary {
+  background: var(--boss-teal);
+  border-color: var(--boss-teal);
+  color: #04142e;
+}
+
+.md-typeset .boss-hero .md-button:hover,
+.md-typeset .boss-hero .md-button:focus {
+  background: var(--boss-teal);
+  border-color: var(--boss-teal);
+  color: #ffffff;
+}
+
+/* ---------- Stat tiles ---------- */
+.boss-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.8rem;
+  margin: 1.2rem 0 1.6rem;
+}
+
+.boss-stats .stat {
+  border: 1px solid var(--boss-card-border);
+  border-radius: 0.5rem;
+  padding: 0.8rem 1rem;
+}
+
+.boss-stats .stat .value {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--boss-stat-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.boss-stats .stat .label {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.75;
+}
+
+/* ---------- Misc ---------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border-color: var(--boss-card-border);
+}
+
+.md-typeset table:not([class]) th {
+  white-space: nowrap;
+}
+
+/* Field reference: keep field names on one line */
+.md-typeset .field-table td:first-child code {
+  white-space: nowrap;
+}
+
+/* Placeholders still to be filled in before launch */
+.todo {
+  background: rgba(252, 238, 33, 0.35);
+  border-radius: 0.2rem;
+  padding: 0 0.25em;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .boss-hero {
+    padding: 1.4rem 1.1rem;
+    border-radius: 0;
+    margin: 0 -0.8rem 1.4rem;
+  }
+
+  .md-typeset .boss-hero h1 {
+    font-size: 2.1rem;
+  }
+}

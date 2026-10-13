@@ -1,0 +1,101 @@
+/* The only change to the stock sphinx-book-theme look (as used by the
+   DeepHyper docs): the logo artwork has a navy stroke, so it gets a small
+   white tile in dark mode. */
+html[data-theme="dark"] .navbar-brand img.logo__image {
+  background: #ffffff;
+  border-radius: 0.6rem;
+  max-width: 9rem;
+  margin: 0 auto;
+}
+
+/* Previous / Next buttons, styled after the simsopt docs. */
+.boss-footer-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  /* the footer sits outside the article's padding: inset to the text column */
+  margin: 2rem 1rem 1rem;
+}
+
+.boss-btn {
+  display: inline-block;
+  padding: 6px 12px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  background-color: #f3f6f6;
+  color: #404040;
+  line-height: normal;
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: inset 0 1px 2px -1px rgba(255, 255, 255, 0.5),
+              inset 0 -2px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.boss-btn:hover {
+  background-color: #e5ebeb;
+  color: #404040;
+  text-decoration: none;
+}
+
+.boss-btn-next {
+  margin-left: auto;
+}
+
+html[data-theme="dark"] .boss-btn {
+  background-color: #2b2f33;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #ced6dd;
+  box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .boss-btn:hover {
+  background-color: #383d42;
+  color: #ced6dd;
+}
+
+/* Video at the top of the home page. */
+.boss-hero-video {
+  margin: 1.5rem 0;
+}
+
+.boss-hero-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  background: #0b0f17;
+}
+
+.boss-hero-video figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--pst-color-text-muted);
+}
+
+/* Headline numbers on the database overview page. */
+.boss-stat {
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--pst-color-border);
+  border-radius: 0.5rem;
+}
+
+.boss-stat-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--pst-color-text-base);
+}
+
+.boss-stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--pst-color-text-muted);
+}
+
+/* Sources table on the database overview page: keep the counts on one line. */
+table.boss-sources td:nth-child(3) {
+  white-space: nowrap;
+}
