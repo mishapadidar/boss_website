@@ -20,8 +20,10 @@ open docs/_build/html/index.html
 For live reload while editing: `pip install sphinx-autobuild` and run
 `sphinx-autobuild docs docs/_build/html`.
 
-Sphinx skips copying `docs/_static/` when no page has changed, so after editing
-only CSS or images, rebuild from scratch: `rm -rf docs/_build` first.
+Rebuild from scratch (`rm -rf docs/_build` first) before publishing. An
+incremental build only rewrites the pages whose source changed, so the other
+pages keep an old sidebar, deleted pages stay in the output, and edits to
+`docs/_static/` alone are not copied.
 
 ## Layout
 
