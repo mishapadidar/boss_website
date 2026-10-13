@@ -111,12 +111,17 @@ section#from-source > h3 {
 table.boss-fields {
   table-layout: fixed;
 }
-table.boss-fields th:nth-child(1) { width: 30%; }
-table.boss-fields th:nth-child(2) { width: 15%; }
-table.boss-fields th:nth-child(3) { width: 13%; }
-table.boss-fields th:nth-child(4) { width: 42%; }
+table.boss-fields th:nth-child(1) { width: 28%; }
+table.boss-fields th:nth-child(2) { width: 14%; }
+table.boss-fields th:nth-child(3) { width: 17%; }
+table.boss-fields th:nth-child(4) { width: 41%; }
 table.boss-fields code,
 table.boss-fields code span.pre {
   white-space: normal;
   overflow-wrap: anywhere;
+}
+/* shapes in the Type column break only at spaces */
+table.boss-fields td:nth-child(3) code,
+table.boss-fields td:nth-child(3) code span.pre {
+  overflow-wrap: normal;
 }

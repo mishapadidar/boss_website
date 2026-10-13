@@ -40,7 +40,7 @@ print(f"{uuid}: {len(t)} samples, t from {t[0] * 1e6:.0f} to {t[-1] * 1e6:.1f} u
 
 The samples are 1 µs apart, starting at $t = 1$ µs. A lost orbit ends with
 one extra sample at the time it was lost, which falls between two of those
-times. The angles are wrapped to $(-\pi, \pi]$.
+times. The angles are wrapped to $[-\pi, \pi)$.
 
 To see where the particle goes,
 {func}`~boss_bench.trajectory.to_xyz` converts the orbit to Cartesian

@@ -1,8 +1,9 @@
 # Fast-ion confinement
 
-For every configuration, the BoSS follows 15,000 fusion-born alpha particles
-and records whether each one is confined or lost. This is the first
-simulation type in the database.
+These fields describe the fast-ion confinement simulations: fusion-born alpha
+particles followed along their guiding-center orbits in each equilibrium, and
+whether each one is confined or lost. For quantities describing the equilibria,
+see [Ideal MHD](ideal-mhd.md).
 
 ## Simulation setup
 
@@ -22,19 +23,24 @@ simulation type in the database.
 Stored in the **confinement files**, with one entry per alpha particle
 and 15,000 particles per configuration.
 
-| HDF5 name | Symbol | Description |
-| --- | --- | --- |
-| `confinement_time` | $t_\text{loss}$ | Time at which the particle was lost, i.e. reached $s = 0.98$ [s]. Equals `t_max` if it was never lost. Shape `(15000,)`. |
-| `s_init` | $s_0$ | Birth surface (0.1, 0.25, or 0.5). Shape `(15000,)`. |
-| `theta_init` | $\theta_{B,0}$ | Initial Boozer poloidal angle, in $[0, 2\pi)$ [rad]. Shape `(15000,)`. |
-| `zeta_init` | $\zeta_{B,0}$ | Initial Boozer toroidal angle, in $[0, 2\pi)$ [rad]. Shape `(15000,)`. |
-| `vpar_init` | $v_{\parallel,0}$ | Initial parallel velocity [m/s]. Shape `(15000,)`. |
-| `s_end` | $s_\text{end}$ | Normalized toroidal flux when the simulation stopped. Shape `(15000,)`. |
-| `theta_end` | $\theta_{B,\text{end}}$ | Final Boozer poloidal angle, in $[-\pi, \pi]$ [rad]. Shape `(15000,)`. |
-| `zeta_end` | $\zeta_{B,\text{end}}$ | Final Boozer toroidal angle, in $[-\pi, \pi)$ [rad]. Shape `(15000,)`. |
-| `vpar_end` | $v_{\parallel,\text{end}}$ | Final parallel velocity [m/s]. Shape `(15000,)`. |
-| `t_max` | $t_\text{max}$ | Maximum simulation time [s]. |
-| `tol` | – | Relative and absolute tolerance of the adaptive integrator. |
+```{table}
+:class: boss-fields
+:width: 100%
+
+| HDF5 name | Symbol | Type | Description |
+| --- | --- | --- | --- |
+| `confinement_time` | $t_\text{loss}$ | array `(15000,)` | Time at which the particle was lost, i.e. reached $s = 0.98$ [s]. Equals `t_max` if it was never lost. |
+| `s_init` | $s_0$ | array `(15000,)` | Birth surface (0.1, 0.25, or 0.5). |
+| `theta_init` | $\theta_{B,0}$ | array `(15000,)` | Initial Boozer poloidal angle, in $[0, 2\pi)$ [rad]. |
+| `zeta_init` | $\zeta_{B,0}$ | array `(15000,)` | Initial Boozer toroidal angle, in $[0, 2\pi)$ [rad]. |
+| `vpar_init` | $v_{\parallel,0}$ | array `(15000,)` | Initial parallel velocity [m/s]. |
+| `s_end` | $s_\text{end}$ | array `(15000,)` | Normalized toroidal flux when the simulation stopped. |
+| `theta_end` | $\theta_{B,\text{end}}$ | array `(15000,)` | Final Boozer poloidal angle, in $[-\pi, \pi]$ [rad]. |
+| `zeta_end` | $\zeta_{B,\text{end}}$ | array `(15000,)` | Final Boozer toroidal angle, in $[-\pi, \pi)$ [rad]. |
+| `vpar_end` | $v_{\parallel,\text{end}}$ | array `(15000,)` | Final parallel velocity [m/s]. |
+| `t_max` | $t_\text{max}$ | float | Maximum simulation time, 0.1 s [s]. |
+| `tol` | – | float | Relative and absolute tolerance of the adaptive integrator. |
+```
 
 
 A particle is lost if `confinement_time < t_max - 1e-14`. Loss quantities are
@@ -48,15 +54,26 @@ on the plasma boundary.
 
 ## Trajectory fields
 
-Stored in the **trajectory files**, which hold up to 40 configurations each, with 6,000 orbits per
-configuration. The orbits are stored stacked in one array, and offsets mark
-where each orbit starts.
+Stored in the **trajectory files**, which hold up to 40 configurations each,
+with 6,000 orbits per configuration. The orbits have different lengths, so they
+are stored in a compressed sparse row (CSR) format: stacked in one array, with
+offsets marking where each orbit starts. Unlike the other fields, `traj_data`,
+`traj_offsets` and `config_offsets` run over the whole file rather than one
+configuration.
 
-| HDF5 name | Symbol | Description |
-| --- | --- | --- |
-| `traj_data` | $(t, s, \theta_B, \zeta_B, v_\parallel)$ | All orbit samples in the file, one row per sample. Shape `(n_samples, 5)`. Columns: time [s], normalized flux, Boozer poloidal angle [rad], Boozer toroidal angle [rad], parallel velocity [m/s]. |
-| `traj_offsets` | – | Orbit `k` is `traj_data[traj_offsets[k]:traj_offsets[k+1]]`. Shape `(n_orbits + 1,)`, over the whole file. |
-| `config_offsets` | – | The orbits of configuration `i` are `config_offsets[i]` to `config_offsets[i+1] - 1`. Shape `(41,)`, over the whole file. |
+```{table}
+:class: boss-fields
+:width: 100%
+
+| HDF5 name | Symbol | Type | Description |
+| --- | --- | --- | --- |
+| `traj_data` | – | array `(n_samples, 5)` | All orbit samples in the file, one row per sample. Columns $(t, s, \theta_B, \zeta_B, v_\parallel)$: time [s], normalized toroidal flux, Boozer poloidal and toroidal angles in $[-\pi, \pi)$ [rad], parallel velocity [m/s]. |
+| `traj_offsets` | – | array `(n_orbits + 1,)` | Orbit `k` is `traj_data[traj_offsets[k]:traj_offsets[k+1]]`. |
+| `config_offsets` | – | array `(n_configs + 1,)` | The orbits of configuration `i` are `config_offsets[i]` to `config_offsets[i+1] - 1`. |
+| `dt_save` | $\Delta t$ | float | Time between samples, 1 µs [s]. |
+| `t_max` | $t_\text{max}$ | float | Maximum simulation time, 1 ms [s]. |
+| `tol` | – | float | Relative and absolute tolerance of the adaptive integrator. |
+```
 
 
 ## Reading an orbit
