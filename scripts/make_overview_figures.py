@@ -17,6 +17,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 OUT = pathlib.Path(__file__).resolve().parents[1] / "docs" / "_static" / "overview"
+QS_BINS = np.arange(0, 1.051, 0.025)
+IOTA_BINS = np.arange(-1.5, 2.001, 0.1)
+AR_BINS = np.arange(1.5, 13.01, 0.5)
 
 # One series per panel, in slot 1 of the reference palette; ink and grid per mode.
 THEMES = {
@@ -27,9 +30,7 @@ THEMES = {
 
 def load(stats_path):
     d = np.load(stats_path)
-    t = {k: d[k] for k in d.files}
-    t["loss_fraction"] = np.mean([t[f"loss_fraction_s_0_{s}"] for s in ("10", "25", "50")], axis=0)
-    return t
+    return {k: d[k] for k in d.files}
 
 
 def print_numbers(t, files):
@@ -48,6 +49,14 @@ def print_numbers(t, files):
             print(line)
     print(f"total size: {sum(f['bytes'] for f in files) / 1e12:.2f} TB")
     print(f"vacuum: {np.mean(t['enforce_vacuum']):.0%}")
+    print("left out of the histograms:",
+          f"aspect ratio > {AR_BINS[-1]:g}: {np.sum(t['aspect_ratio'] > AR_BINS[-1])},",
+          f"mean iota outside [{IOTA_BINS[0]:g}, {IOTA_BINS[-1]:g}]: "
+          f"{np.sum((t['iota_mean'] < IOTA_BINS[0]) | (t['iota_mean'] > IOTA_BINS[-1]))},",
+          f"QS error > {QS_BINS[-1]:g}: {np.sum(t['sqrt_boozer_qs_error_mean'] > QS_BINS[-1])},",
+          f"nfp > 6: {np.sum(t['nfp'] > 6)}")
+    print(f"non-vacuum beta: up to {100 * t['plasma_beta'].max():.2f}%, "
+          f"above 1%: {np.mean(t['plasma_beta'][~t['enforce_vacuum'].astype(bool)] > 0.01):.0%} of non-vacuum")
     print(f"distinct source devices: {len(set(zip(t['source_dataset'], t['source_id']))):,}")
     print("\nconfigurations per source (source_dataset)")
     for src in sorted(set(t["source_dataset"]), key=lambda s: -np.sum(t["source_dataset"] == s)):
@@ -77,33 +86,41 @@ def figure(t, mode):
     theme = THEMES[mode]
     plt.rcParams["svg.fonttype"] = "none"          # text stays text: the page font renders it
     plt.rcParams["font.family"] = "sans-serif"
-    fig, axes = plt.subplots(2, 2, figsize=(9, 6))
+    fig, axes = plt.subplots(2, 3, figsize=(8.6, 5.6))
     axes = axes.ravel()
     fig.patch.set_alpha(0)
 
     ax = axes[0]
+    hist(ax, theme, t["loss_fraction_s_0_25"], np.linspace(0, 1, 26))
+    panel(ax, theme, "Loss fraction", "born on $s = 0.25$, lost by 0.1 s")
+
+    ax = axes[1]
+    hist(ax, theme, t["sqrt_boozer_qs_error_mean"], QS_BINS)
+    panel(ax, theme, "Quasi-symmetry error", r"$\sqrt{f_\mathrm{QS}}$, mean over $s$")
+
+    ax = axes[2]
+    hist(ax, theme, t["aspect_ratio"], AR_BINS)
+    panel(ax, theme, "Aspect ratio", r"$A = R_0 / a$")
+
+    ax = axes[3]
+    hist(ax, theme, t["iota_mean"], IOTA_BINS)
+    panel(ax, theme, "Rotational transform", r"$\iota$, mean over $s$")
+
+    ax = axes[4]
+    beta = 100 * t["plasma_beta"][~t["enforce_vacuum"].astype(bool)]
+    hist(ax, theme, beta, np.arange(0, 6.01, 0.25))
+    panel(ax, theme, "Plasma beta (non-vacuum)", r"$\langle\beta\rangle$ [%]")
+
+    ax = axes[5]
     nfp, counts = np.unique(t["nfp"][t["nfp"] <= 6], return_counts=True)
     ax.bar(nfp, counts, width=0.72, color=theme["bar"], linewidth=0)
     ax.set_xticks(nfp)
     panel(ax, theme, "Field periods", r"$n_\mathrm{fp}$")
 
-    ax = axes[1]
-    hist(ax, theme, t["aspect_ratio"], np.arange(1.5, 13.01, 0.5))
-    panel(ax, theme, "Aspect ratio", r"$A = R_0 / a$")
-
-    ax = axes[2]
-    beta = 100 * t["plasma_beta"][~t["enforce_vacuum"].astype(bool)]
-    hist(ax, theme, beta, np.arange(0, 6.01, 0.25))
-    panel(ax, theme, "Plasma beta (non-vacuum)", r"$\langle\beta\rangle$ [%]")
-
-    ax = axes[3]
-    hist(ax, theme, t["loss_fraction"], np.linspace(0, 1, 26))
-    panel(ax, theme, "Alpha-particle loss fraction", "fraction of 15,000 particles lost by 0.1 s")
-
     for ax in axes:
         ax.patch.set_alpha(0)
     fig.supylabel("configurations", color=theme["muted"], fontsize=10.5, x=0.004)
-    fig.tight_layout(w_pad=2.5, h_pad=2.0)
+    fig.tight_layout(w_pad=2.0, h_pad=2.0)
     OUT.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT / f"distributions-{mode}.svg", transparent=True)
     plt.close(fig)

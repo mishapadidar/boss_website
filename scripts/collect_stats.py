@@ -1,9 +1,9 @@
 """Collect the numbers behind docs/data/overview.md from the release files on the cluster.
 
-Writes one row per configuration (source, split, scalar properties, and the loss fraction
-of the particles born on each surface) to boss_site_stats.npz, and the size and
-contents of every file to boss_site_files.json, both in OUT (on CephFS, so they can be
-copied from any login node). Run on rusty, then plot with
+Writes one row per configuration (source, split, scalar properties, the mean of the iota and
+quasi-symmetry error profiles, and the loss fraction of the particles born on each surface)
+to boss_site_stats.npz, and the size and contents of every file to boss_site_files.json,
+both in OUT (on CephFS, so they can be copied from any login node). Run on rusty, then plot with
 make_overview_figures.py (see README.md).
 """
 import glob, json, os
@@ -14,13 +14,14 @@ ROOT = "/mnt/home/mpadidar/ceph/artemiss/bossbench"
 OUT = "/mnt/home/mpadidar/ceph/artemiss/web"
 SCALARS = ["nfp", "aspect_ratio", "major_radius", "minor_radius", "plasma_beta",
            "volume_avg_modB", "mirror_ratio", "enforce_vacuum", "stellsym"]
+PROFILES = ["iota", "sqrt_boozer_qs_error"]
 S_INITS = {"10": 0.1, "25": 0.25, "50": 0.5}
 LOSS_TOL = 1e-14   # as in boss_bench.confinement
 CHUNK = 256
 
 files = []
 rows = {k: [] for k in ["uuid", "source_dataset", "source_id", "split", "fname", "row"] + SCALARS
-        + [f"loss_fraction_s_0_{s}" for s in S_INITS]}
+        + [f"{k}_mean" for k in PROFILES] + [f"loss_fraction_s_0_{s}" for s in S_INITS]}
 for path in sorted(glob.glob(f"{ROOT}/confinement/*.hdf5")):
     name = os.path.basename(path)
     split = "test" if "_test_" in name else "train"
@@ -31,6 +32,8 @@ for path in sorted(glob.glob(f"{ROOT}/confinement/*.hdf5")):
         rows["source_id"] += list(f["source_id"].asstr()[:])
         for k in SCALARS:
             rows[k] += list(f[k][:].reshape(n))
+        for k in PROFILES:                    # averaged over the 15 flux surfaces of s1d
+            rows[f"{k}_mean"] += list(f[k][:].mean(axis=1))
         t_max = f["t_max"][:]
         for a in range(0, n, CHUNK):
             lost = f["confinement_time"][a:a + CHUNK] < t_max[a:a + CHUNK, None] - LOSS_TOL

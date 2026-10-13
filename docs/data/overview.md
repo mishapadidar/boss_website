@@ -1,14 +1,14 @@
 # Database overview
 
-The BoSS holds **179,049 stellarator configurations** gathered from a dozen
-sources, from curated databases of optimized devices to randomly generated
-shapes. Every configuration goes through the same pipeline: an
-[ideal MHD](ideal-mhd.md) equilibrium computed with VMEC, followed by
-[fast-ion confinement](fast-ion.md) simulations of 15,000 alpha particles.
+The BoSS holds **179,049 stellarator equilibria** gathered from many sources.
+Every device goes through the same pipeline: an [ideal MHD](ideal-mhd.md)
+equilibrium is computed, followed by [fast-ion confinement](fast-ion.md)
+simulations of alpha particles.
 
 <!-- Numbers on this page are printed by scripts/make_overview_figures.py.
-     TODO: rerun it once the final confinement and trajectory files are generated;
-     the numbers and histograms below are from the previous processing. -->
+     TODO: rerun it once the final confinement files are generated. The numbers below
+     are from the previous processing; the histograms are from the 102,921
+     configurations generated so far (all of the test split, 78,000 of train). -->
 
 ::::{grid} 2 2 4 4
 :gutter: 3
@@ -42,7 +42,7 @@ shapes. Every configuration goes through the same pipeline: an
 
 The field `source_dataset` records where each configuration came from. The
 configurations come from about 97,000 distinct source devices
-(`source_id`). A device can appear more than once, with different
+(`source_id`). A boundary can appear more than once, with different
 pressure and current profiles, and scaled to a different machine size and
 field strength.
 
@@ -55,9 +55,9 @@ field strength.
 | --- | --- | ---: |
 | `quasr` | Quasi-axisymmetric and quasi-helically symmetric stellarators from [QUASR](https://quasr.flatironinstitute.org/) ([Giuliani et al.](https://arxiv.org/abs/2409.04826)). | 70,764 |
 | `constellaration` | Quasi-isodynamic-like boundaries from the [ConStellaration](https://arxiv.org/abs/2506.19583) dataset (Cadena et al., 2025). | 66,135 |
-| `model_improvement_2026` | Random boundaries on which a loss-fraction surrogate model is likely to be wrong, added to improve surrogate models. Generated for the BoSS. | 13,922 |
+| `model_improvement_2026` | Boundaries generated randomly using active learning. Generated for the BoSS paper. | 13,922 |
 | `random_ellipse` | Unoptimized rotating ellipses with random elongation, aspect ratio and axis torsion. Generated for the BoSS. | 7,932 |
-| `model_improvement_bo_2026` | Boundaries chosen by Bayesian optimization to improve surrogate models. Generated for the BoSS. | 7,635 |
+| `model_improvement_bo_2026` | Boundaries chosen with active learning using surrogate optimization. | 7,635 |
 | `random_ellipse_perturbed` | Rotating ellipses with random perturbations in their higher Fourier modes. Generated for the BoSS. | 6,872 |
 | `fast_ion_opt_2026` | Boundaries optimized for alpha-particle confinement using a surrogate model. Generated for the BoSS. | 5,530 |
 | `omnigenity` | Omnigenous equilibria computed with DESC, from the omnigenity database of [Gaur et al.](https://archive.aps.org/dpp/2023/ap01/33) (2023). | 185 |
@@ -69,25 +69,37 @@ field strength.
 
 ```{image} ../_static/overview/distributions-light.svg
 :class: only-light
-:alt: Histograms of the number of field periods, aspect ratio, plasma beta and alpha-particle loss fraction over all configurations.
+:alt: Histograms of the loss fraction of particles born on s = 0.25, the quasi-symmetry error, the aspect ratio, the mean rotational transform, the plasma beta of non-vacuum devices, and the number of field periods.
 ```
 
 ```{image} ../_static/overview/distributions-dark.svg
 :class: only-dark
-:alt: Histograms of the number of field periods, aspect ratio, plasma beta and alpha-particle loss fraction over all configurations.
+:alt: Histograms of the loss fraction of particles born on s = 0.25, the quasi-symmetry error, the aspect ratio, the mean rotational transform, the plasma beta of non-vacuum devices, and the number of field periods.
 ```
 
-The histograms leave out 16 configurations with aspect ratio above 13 and one
-with $n_\text{fp} = 12$. Two thirds of the configurations are vacuum equilibria ($\beta = 0$). The rest
-have finite pressure, with $\langle\beta\rangle$ up to about 6%. Each
-configuration is scaled to a randomly chosen machine size (major radius
-1–33 m) and field strength (volume-averaged $B$ of 4–11 T).
+The top row shows the loss fraction of the particles born on $s = 0.25$, the
+quasi-symmetry error (the square root of the summed squares of the Boozer
+$\lvert B \rvert$ harmonics that break quasi-symmetry, relative to the
+symmetric ones, averaged over the flux surfaces) and the aspect ratio. The
+bottom row shows the mean rotational transform, the plasma $\beta$ of the
+non-vacuum devices, and the number of field periods.
+
+Many devices deviate strongly from quasi-symmetry, although a large share come
+from QUASR, a database of devices optimized for quasi-symmetry. About a third of
+the devices have finite pressure, with $\langle\beta\rangle$ up to about 6%;
+most of them are above the reactor-grade value of 1%. The mean rotational
+transform is negative for about a fifth of the devices. Each configuration is
+scaled to a randomly chosen machine size (major radius of about 1–31 m) and field
+strength (volume-averaged $B$ of 4–11 T). The histograms leave out 11
+configurations with aspect ratio above 13, 590 with a mean rotational transform
+outside $[-1.5, 2]$, and one with $n_\text{fp} = 12$.
 
 ## Files
 
-The data comes in two kinds of HDF5 file. Both kinds hold every
-[ideal MHD](ideal-mhd.md) field of their configurations; they differ in the
-[fast-ion data](fast-ion.md) they carry.
+The data comes in two kinds of HDF5 files: confinement files and trajectory
+files. They differ only in the type of guiding-center information they carry.
+Confinement files have particle initial and final states, whereas trajectory
+files contain full trajectories.
 
 | | Confinement files | Trajectory files |
 | --- | --- | --- |
@@ -99,11 +111,11 @@ The data comes in two kinds of HDF5 file. Both kinds hold every
 The confinement files (325 GB in all) are enough to compute loss fractions
 and heat fluxes. The trajectory files (2.9 TB) hold 134 million orbits for
 22,307 of the configurations, for work on particle motion itself. See
-[Download Data](../download.md) to get them.
+[Download Data](../download.md) to download the data.
 
 ## Train/test split
 
-The file names give the split. The test split holds 24,921 configurations
+The file names indicate the split they belong to, train or test. The test split holds 24,921 configurations
 (14%), drawn at random across sources. All configurations that come from the
 same source device are in the same split, so a model is never tested on a
-reshaped or rescaled copy of a device it was trained on.
+rescaled copy of a device it was trained on.
