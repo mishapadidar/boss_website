@@ -1,4 +1,4 @@
-# The Benchmark of Stellarator Simulations (BoSS)
+# The BoSS: a benchmark of stellarator simulations
 
 [Installation](installation.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
 [Download Data](download.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
