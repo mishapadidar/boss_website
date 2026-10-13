@@ -58,12 +58,17 @@ xyz = bb.to_xyz(rec, orbit["s"], orbit["theta"], orbit["zeta"])   # positions [m
 shown = orbit["t"] <= 100e-6                       # the first 100 us
 r, theta = np.sqrt(orbit["s"][shown]), orbit["theta"][shown]
 fig, axs = plt.subplots(1, 3, figsize=(12, 3.6))
+circle = np.linspace(0, 2 * np.pi, 200)
+for s_level in (0.1, 0.5, 1.0):                    # flux surfaces, for reference
+    axs[0].plot(np.sqrt(s_level) * np.cos(circle), np.sqrt(s_level) * np.sin(circle), "k--", lw=0.6)
+axs[0].plot(0, 0, "k.")                            # the magnetic axis, s = 0
 axs[0].plot(r * np.cos(theta), r * np.sin(theta), lw=0.8)
 axs[0].set(xlabel=r"$\sqrt{s}\cos\theta$", ylabel=r"$\sqrt{s}\sin\theta$", aspect="equal")
-axs[1].plot(xyz[shown, 0], xyz[shown, 1], ".", ms=2)
+axs[1].plot(xyz[shown, 0], xyz[shown, 1], lw=0.8)
 axs[1].set(xlabel="x [m]", ylabel="y [m]", aspect="equal")
 axs[2].plot(orbit["t"][shown] * 1e6, orbit["vpar"][shown] / bb.trajectory.V_ALPHA)
-axs[2].set(xlabel="time [µs]", ylabel=r"$v_\parallel / v$")
+axs[2].axhline(0, color="k", ls="--", lw=0.6)
+axs[2].set(xlabel="time [µs]", ylabel=r"$v_\parallel / v$", ylim=(-1, 1))
 fig.tight_layout()
 ```
 
