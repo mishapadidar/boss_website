@@ -59,7 +59,7 @@ on the plasma boundary.
 The **trajectory files** hold the full guiding-center orbits of 6,000
 particles per configuration, sampled every 1 µs for the first 1 ms, for up to
 40 configurations per file, along with the [Ideal MHD](ideal-mhd.md) fields of
-each configuration. They are meant for work on particle motion itself. The
+each configuration. The
 samples of an orbit are regularly spaced, 1 µs apart, unless the particle is
 lost: its trajectory then ends with one last sample at the time it was lost.
 
