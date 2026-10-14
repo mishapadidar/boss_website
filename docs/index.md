@@ -80,6 +80,9 @@ The BibTeX entry is below.
 
 The data is released under the
 [Creative Commons Attribution 4.0 International (CC BY 4.0) license](https://creativecommons.org/licenses/by/4.0/).
+The `boss-bench` package is released under the
+[Apache License 2.0](https://github.com/mishapadidar/boss_bench/blob/main/LICENSE).
+Copyright 2026 The Simons Foundation.
 
 ## Contact
 

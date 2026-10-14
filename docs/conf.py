@@ -7,7 +7,7 @@
 
 project = "The BoSS"
 author = "The BoSS Development Team"
-copyright = "2026, The BoSS Development Team"
+copyright = "2026, The Simons Foundation"
 
 extensions = [
     "myst_parser",
