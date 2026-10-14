@@ -155,20 +155,24 @@ bb.plot_loss_fraction_curves(rec)
 Lost particles strike the plasma boundary at their final Boozer angles
 `zeta_end` ($\zeta_B$) and `theta_end` ($\theta_B$).
 {func}`~boss_bench.heat_flux.lost_particles` returns the strike points of the
-particles born on one surface, and their energies. A particle lost at time
-$t_\text{loss}$ carries the energy
+particles born on one surface, and their energies. It takes the tracing
+outcomes as arguments, so it applies equally to a model's predictions of them.
+A particle lost at time $t_\text{loss}$ carries the energy
 $E = 3.5\,\text{MeV} \cdot e^{-2 t_\text{loss} / \tau_s}$, where $\tau_s$ is the
 slowing-down time, which we approximate by $t_\text{max} = 0.1$ s:
 
 ```python
-zeta, theta, energy, n_launched = bb.lost_particles(rec, s0=0.1)
+zeta, theta, energy, n_launched = bb.lost_particles(
+    rec["confinement_time"], rec["t_max"], rec["s_init"], rec["zeta_end"], rec["theta_end"], s0=0.1)
 print(f"{len(zeta)} of the {n_launched} particles born on s = 0.1 are lost")
 ```
 
-{func}`~boss_bench.heat_flux.binned_heat_flux` folds the strike points of all
-field periods into one, bins their energy, and divides each bin by its area on
-the boundary, computed from `R_boozer`, `Z_boozer` and `nu_boozer` at $s = 1$.
-The result is the heat flux $Q$ in MeV/m² per launched particle:
+{func}`~boss_bench.heat_flux.binned_heat_flux` takes the strike points, true or
+predicted, and reads only the boundary geometry from the record. It folds the
+strike points of all field periods into one, bins their energy, and divides
+each bin by its area on the boundary, computed from `R_boozer`, `Z_boozer` and
+`nu_boozer` at $s = 1$. The result is the heat flux $Q$ in MeV/m² per launched
+particle:
 
 ```python
 Q = bb.binned_heat_flux(zeta, theta, energy, n_launched, rec, resolution=32)
