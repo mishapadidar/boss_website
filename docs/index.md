@@ -20,7 +20,10 @@ physics.
   </video>
   <figcaption>A burst of 400 alpha particles followed along their guiding-center
   orbits in one stellarator configuration. Orange marks show where lost
-  particles strike the plasma boundary.</figcaption>
+  particles strike the plasma boundary. The panel on the right counts the
+  particles lost so far: the loss fraction is the share of the 400 particles
+  that have been lost, and the loss rate is the number of particles lost per
+  millisecond at each moment.</figcaption>
 </figure>
 <script>
   // no autoplay for readers who ask for reduced motion
