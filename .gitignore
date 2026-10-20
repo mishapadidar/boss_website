@@ -1,4 +1,5 @@
 .venv/
+venv/
 docs/_build/
 .cache/
 __pycache__/

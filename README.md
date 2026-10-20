@@ -10,12 +10,23 @@ GitHub Pages.
 
 ## Preview locally
 
+Set up a virtual environment once. The package pages are generated from the
+docstrings of `boss-bench`, so install it too, from a local checkout:
+
 ```bash
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt
-.venv/bin/sphinx-build -b html docs docs/_build/html
-open docs/_build/html/index.html
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install -e /path/to/boss_bench
 ```
+
+Then, with the environment active, build the site:
+
+```bash
+sphinx-build -b html docs docs/_build/html
+```
+
+and open `docs/_build/html/index.html`.
 
 For live reload while editing: `pip install sphinx-autobuild` and run
 `sphinx-autobuild docs docs/_build/html`.
