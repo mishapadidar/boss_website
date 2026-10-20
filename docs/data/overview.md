@@ -5,10 +5,7 @@ Every device goes through the same pipeline: an [ideal MHD](ideal-mhd.md)
 equilibrium is computed, followed by [fast-ion confinement](fast-ion.md)
 simulations of alpha particles.
 
-<!-- Numbers on this page are printed by scripts/make_overview_figures.py.
-     TODO: rerun it once the final confinement files are generated. The numbers below
-     are from the previous processing; the histograms are from the 102,921
-     configurations generated so far (all of the test split, 78,000 of train). -->
+<!-- Numbers on this page are printed by scripts/make_overview_figures.py. -->
 
 ::::{grid} 2 2 4 4
 :gutter: 3
