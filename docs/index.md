@@ -54,6 +54,8 @@ pip install .
 
 See the [package documentation](package.md) for how to use it.
 
+<!-- Restore once the paper is out.
+
 ## Citing the BoSS
 
 If you find this project useful for your research, please consider citing:
@@ -75,6 +77,8 @@ The BibTeX entry is below.
   doi          = {XX.XXXXX/XXXXX},
 }
 ```
+
+-->
 
 ## License
 
