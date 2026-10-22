@@ -41,8 +41,9 @@ import pathlib
 import sys
 
 PACKAGE = "boss_bench"
-API_MODULES = ["data", "confinement", "heat_flux", "trajectory", "design", "plotting", "models",
-               "models.loss_fraction", "models.heat_flux", "models.inverse_design"]
+API_MODULES = ["data", "confinement", "heat_flux", "trajectory", "design", "plotting", "models"]
+# submodules documented on pages of their own, listed under their package's page in the sidebar
+API_SUBMODULES = {"models": ["loss_fraction", "heat_flux", "inverse_design"]}
 if os.environ.get("BOSS_PACKAGE_SRC"):
     sys.path.insert(0, os.environ["BOSS_PACKAGE_SRC"])
 
@@ -65,22 +66,34 @@ def _write_api_pages():
     api_dir.mkdir(exist_ok=True)
     pages = {}
     for number, name in enumerate(API_MODULES):
-        module = f"{PACKAGE}.{name}"
         # the number only orders the glob toctree; the page title is the module name
-        pages[f"{number:02d}_{name}.md"] = (
-            f"# `{module}`\n\n"
-            "```{eval-rst}\n"
-            f".. automodule:: {module}\n"
-            "   :members:\n"
-            "```\n")
-    for old in api_dir.glob("*.md"):
-        if old.name not in pages:
+        pages[f"{number}_{name}.md"] = _api_page(name, API_SUBMODULES.get(name, []))
+        for sub in API_SUBMODULES.get(name, []):
+            pages[f"{name}/{sub}.md"] = _api_page(f"{name}.{sub}")
+    for old in api_dir.rglob("*.md"):
+        if old.relative_to(api_dir).as_posix() not in pages:
             old.unlink()
     for name, text in pages.items():
         path = api_dir / name
+        path.parent.mkdir(exist_ok=True)
         # rewrite only on a change, so unchanged pages are not rebuilt
         if not path.exists() or path.read_text() != text:
             path.write_text(text)
+
+
+def _api_page(name, submodules=()):
+    """The API page of module PACKAGE.name, with a hidden toctree of its submodules' pages."""
+    text = (f"# `{PACKAGE}.{name}`\n\n"
+            "```{eval-rst}\n"
+            f".. automodule:: {PACKAGE}.{name}\n"
+            "   :members:\n"
+            "```\n")
+    if submodules:
+        # the glob toctree of index.md does not descend into api/{name}/, so the
+        # submodule pages appear under this page in the sidebar
+        entries = "".join(f"{sub} <{name}/{sub}>\n" for sub in submodules)
+        text += f"\n```{{toctree}}\n:hidden:\n\n{entries}```\n"
+    return text
 
 
 _write_api_pages()
