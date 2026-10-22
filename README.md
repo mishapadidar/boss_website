@@ -83,7 +83,9 @@ page (counts per source, files, sizes), which are then updated by hand.
 The **Package documentation** section is an overview page, `docs/package.md`,
 followed by one API page per module of the `boss-bench` package, generated at
 build time from its Google-style docstrings and written to `docs/api/` (not
-committed). The modules and their order are `API_MODULES` in `docs/conf.py`. The
+committed). The modules and their order are `API_MODULES` in `docs/conf.py`.
+Submodules in `API_SUBMODULES` (the three `boss_bench.models` modules) get pages in
+`docs/api/<module>/`, listed under their module's page in the sidebar. The
 build stops with an error if the package can't be imported, so install it in the
 build environment first (`pip install -e /path/to/boss-bench` while developing).
 PyTorch and safetensors, which `boss_bench.models` needs, are mocked
