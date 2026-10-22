@@ -41,12 +41,14 @@ import pathlib
 import sys
 
 PACKAGE = "boss_bench"
-API_MODULES = ["data", "confinement", "heat_flux", "trajectory", "design", "plotting"]
+API_MODULES = ["data", "confinement", "heat_flux", "trajectory", "design", "plotting", "models",
+               "models.loss_fraction", "models.heat_flux", "models.inverse_design"]
 if os.environ.get("BOSS_PACKAGE_SRC"):
     sys.path.insert(0, os.environ["BOSS_PACKAGE_SRC"])
 
 autodoc_member_order = "bysource"
 autodoc_typehints = "description"
+autodoc_mock_imports = ["torch", "safetensors"]  # boss_bench.models documents without them
 napoleon_numpy_docstring = False
 napoleon_google_docstring = True
 
@@ -65,7 +67,7 @@ def _write_api_pages():
     for number, name in enumerate(API_MODULES):
         module = f"{PACKAGE}.{name}"
         # the number only orders the glob toctree; the page title is the module name
-        pages[f"{number}_{name}.md"] = (
+        pages[f"{number:02d}_{name}.md"] = (
             f"# `{module}`\n\n"
             "```{eval-rst}\n"
             f".. automodule:: {module}\n"

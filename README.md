@@ -86,6 +86,8 @@ build time from its Google-style docstrings and written to `docs/api/` (not
 committed). The modules and their order are `API_MODULES` in `docs/conf.py`. The
 build stops with an error if the package can't be imported, so install it in the
 build environment first (`pip install -e /path/to/boss-bench` while developing).
+PyTorch and safetensors, which `boss_bench.models` needs, are mocked
+(`autodoc_mock_imports`), so the build does not install them.
 
 To build against a local checkout while developing the package:
 
