@@ -58,15 +58,12 @@ Each module has its own page, with every function and the formula of every metri
 : Plots a configuration, its particle losses and heat flux, and its orbits, alone or
   next to a model's predictions.
 
-{mod}`boss_bench.pretrained`
-: Downloads the pretrained models of the paper from Hugging Face, with
-  {func}`~boss_bench.pretrained.download_model`.
-
 {mod}`boss_bench.models`
 : Runs the pretrained models in PyTorch: the loss-fraction surrogate
   ({class}`~boss_bench.models.loss_fraction.LossFractionModel`), the heat-flux model
   ({class}`~boss_bench.models.heat_flux.HeatFluxModel`) and the inverse-design model
-  ({class}`~boss_bench.models.inverse_design.InverseDesignModel`). It needs
+  ({class}`~boss_bench.models.inverse_design.InverseDesignModel`), downloaded from
+  Hugging Face with {func}`~boss_bench.models.download`. It needs
   `pip install "boss-bench[models]"`; see [Download Models](download.md#download-models).
 
 ## Benchmarks

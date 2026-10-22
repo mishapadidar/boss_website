@@ -41,7 +41,7 @@ import pathlib
 import sys
 
 PACKAGE = "boss_bench"
-API_MODULES = ["data", "confinement", "heat_flux", "trajectory", "design", "plotting", "pretrained", "models",
+API_MODULES = ["data", "confinement", "heat_flux", "trajectory", "design", "plotting", "models",
                "models.loss_fraction", "models.heat_flux", "models.inverse_design"]
 if os.environ.get("BOSS_PACKAGE_SRC"):
     sys.path.insert(0, os.environ["BOSS_PACKAGE_SRC"])

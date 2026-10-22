@@ -42,26 +42,44 @@ The BoSS models on Hugging Face
 `inverse_design`
 : Generates plasma boundaries with a chosen loss fraction, shape, field and profiles.
 
-To run the PyTorch models, install the package with its `models` extra. Then
-{func}`~boss_bench.pretrained.download_model` downloads a model into a folder, and
-{func}`~boss_bench.models.load` loads it:
+### Downloading from Hugging Face
+
+Each model is a folder of the Hugging Face repository, holding `config.json`, the PyTorch
+weights `model.safetensors` and the ONNX files. To download whole model folders, use the
+Hugging Face command line, from `pip install huggingface_hub`:
+
+```bash
+hf download mishapadidar/boss --include "heat_flux/*" --local-dir BoSS-models                # one model
+hf download mishapadidar/boss --include "*/config.json" --include "*.onnx" --local-dir BoSS-models   # ONNX only
+hf download mishapadidar/boss --local-dir BoSS-models                                         # everything
+```
+
+Each model then sits in its own folder, such as `BoSS-models/heat_flux`. Single files can
+also be downloaded from the **Files and versions** tab of the
+[repository](https://huggingface.co/mishapadidar/boss/tree/main).
+
+The ONNX files run without PyTorch, for example with
+[ONNX Runtime](https://onnxruntime.ai/). The model card on Hugging Face describes their
+inputs.
+
+### Using the models in Python
+
+To run the PyTorch models, install the package with its `models` extra:
 
 ```bash
 pip install "boss-bench[models]"
 ```
 
+{func}`~boss_bench.models.download` downloads a model's PyTorch files into a folder, and
+{func}`~boss_bench.models.load` loads it, from that folder or from one downloaded with
+`hf download`:
+
 ```python
-import boss_bench as bb
 from boss_bench import models
 
-surrogate = models.load(bb.download_model("loss_fraction", "BoSS-models"))
+surrogate = models.load(models.download("loss_fraction", "BoSS-models"))
 surrogate.predict(record)       # a configuration's fields, from bb.load_record
 ```
 
 Each model reads the BoSS fields it needs by name, from one configuration or from a
 batch of them. The [package documentation](package.md) describes each model.
-
-The ONNX files run without PyTorch, for example with
-[ONNX Runtime](https://onnxruntime.ai/). To download them as well, pass `onnx=True` to
-{func}`~boss_bench.pretrained.download_model`, or download them from Hugging Face. The
-model card on Hugging Face describes their inputs.
