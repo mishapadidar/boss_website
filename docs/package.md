@@ -2,7 +2,7 @@
 
 `boss-bench` is the Python package of the BoSS. It loads the data and computes the
 benchmark metrics exactly as they are defined in the paper. It depends only on NumPy,
-SciPy, h5py and Matplotlib, and needs Python 3.9 or newer. The pretrained models also
+SciPy, h5py and Matplotlib, and needs Python 3.9 or newer. The trained models also
 need PyTorch. Install it with
 
 ```bash
@@ -59,12 +59,12 @@ Each module has its own page, with every function and the formula of every metri
   next to a model's predictions.
 
 {mod}`boss_bench.models`
-: Runs the pretrained models in PyTorch: the loss-fraction surrogate
+: Runs the trained models in PyTorch: the loss-fraction surrogate
   ({class}`~boss_bench.models.loss_fraction.LossFractionModel`), the heat-flux model
   ({class}`~boss_bench.models.heat_flux.HeatFluxModel`) and the inverse-design model
   ({class}`~boss_bench.models.inverse_design.InverseDesignModel`), downloaded from
   Hugging Face with {func}`~boss_bench.models.download`. It needs
-  `pip install "boss-bench[models]"`; see [Download Models](download.md#download-models).
+  `pip install "boss-bench[models]"`; see [Download Models](download-models.md).
 
 ## Benchmarks
 

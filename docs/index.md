@@ -104,6 +104,7 @@ We thank the Flatiron Institute’s Scientific Computing Core and the Simons Fou
 :hidden:
 
 download
+download-models
 data-explorer
 ```
 
