@@ -24,20 +24,41 @@ Three models are available, each in its own folder of the repository:
 : A flow matching model which generates plasma boundaries with a desired loss fraction,
   shape, field and profiles.
 
-To download single files, open the link and use the **Files and versions** tab. To
-download whole model folders, use the Hugging Face command line, `hf download`:
+Use the [`boss-bench`](package.md) pip package to download and run the models.
+Install it with its models:
 
 ```bash
-hf download mishapadidar/boss --include "heat_flux/*" --local-dir BoSS-models                # one model
-hf download mishapadidar/boss --include "*/config.json" --include "*.onnx" --local-dir BoSS-models   # ONNX only
-hf download mishapadidar/boss --local-dir BoSS-models                                         # everything
+pip install "boss-bench[models]"
 ```
 
-or the [`boss-bench`](package.md) pip package, for the PyTorch files of one model:
+Then this downloads the PyTorch files of one model into a folder:
 
 ```python
-boss_bench.models.download("heat_flux", "BoSS-models/heat_flux")
+from boss_bench import models
+
+models.download("heat_flux", "BoSS-models/heat_flux")
 ```
 
-Once the files are downloaded, use the [`boss-bench`](package.md) pip package to load and
-run the models.
+The models can also be downloaded directly from Hugging Face, with its command line:
+
+```bash
+pip install huggingface_hub
+
+# one model
+hf download mishapadidar/boss --include "heat_flux/*" \
+    --local-dir BoSS-models
+
+# the ONNX files only
+hf download mishapadidar/boss --include "*.onnx" \
+    --include "*/config.json" --local-dir BoSS-models
+
+# everything
+hf download mishapadidar/boss --local-dir BoSS-models
+```
+
+or one file at a time, from the **Files and versions** tab of the repository.
+
+The tutorials show how to run each model:
+[Using the loss-fraction surrogate](tutorials/using-loss-fraction-surrogate.md),
+[Using the heat-flux model](tutorials/using-heat-flux-model.md) and
+[Using the inverse-design model](tutorials/using-inverse-design-model.md).

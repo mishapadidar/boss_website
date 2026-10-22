@@ -144,3 +144,5 @@ Output for one train file and one test file (about 3,000 stellarators each).
   split holds about 154,000.
 - **The benchmark.** The surrogate benchmark scores predictions on every
   stellarator of the test split; see [Benchmarks](../package.md#benchmarks).
+
+Next: [Using the loss-fraction surrogate →](using-loss-fraction-surrogate.md)

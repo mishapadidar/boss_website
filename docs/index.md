@@ -115,6 +115,9 @@ data-explorer
 tutorials/exploring
 tutorials/loading-trajectories
 tutorials/surrogate
+tutorials/using-loss-fraction-surrogate
+tutorials/using-heat-flux-model
+tutorials/using-inverse-design-model
 ```
 
 ```{toctree}

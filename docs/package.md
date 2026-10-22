@@ -92,3 +92,7 @@ To see the package in use, work through the tutorials:
   and draw rollouts.
 - [Fitting a surrogate model](tutorials/surrogate.md): predict loss fractions with
   scikit-learn.
+- [Using the loss-fraction surrogate](tutorials/using-loss-fraction-surrogate.md),
+  [the heat-flux model](tutorials/using-heat-flux-model.md) and
+  [the inverse-design model](tutorials/using-inverse-design-model.md): run the paper's
+  trained models.
