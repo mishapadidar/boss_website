@@ -92,7 +92,9 @@ To see the package in use, work through the tutorials:
   and draw rollouts.
 - [Fitting a surrogate model](tutorials/surrogate.md): predict loss fractions with
   scikit-learn.
-- [Using the loss-fraction surrogate](tutorials/using-loss-fraction-surrogate.md),
-  [the heat-flux model](tutorials/using-heat-flux-model.md) and
-  [the inverse-design model](tutorials/using-inverse-design-model.md): run the paper's
-  trained models.
+- [Using the loss-fraction surrogate](tutorials/using-loss-fraction-surrogate.md):
+  predict loss fractions with the paper's trained surrogate.
+- [Using the heat-flux model](tutorials/using-heat-flux-model.md): predict where lost
+  alpha particles strike the boundary, and their heat flux.
+- [Designing stellarators with a generative model](tutorials/designing-stellarators.md):
+  generate boundaries with chosen properties.

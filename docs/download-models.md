@@ -61,4 +61,4 @@ or one file at a time, from the **Files and versions** tab of the repository.
 The tutorials show how to run each model:
 [Using the loss-fraction surrogate](tutorials/using-loss-fraction-surrogate.md),
 [Using the heat-flux model](tutorials/using-heat-flux-model.md) and
-[Using the inverse-design model](tutorials/using-inverse-design-model.md).
+[Designing stellarators with a generative model](tutorials/designing-stellarators.md).

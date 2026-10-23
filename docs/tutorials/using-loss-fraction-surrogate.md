@@ -53,17 +53,18 @@ of configurations, such as the fields from {func}`~boss_bench.data.load`.
 ## A new design
 
 The model reads only the plasma boundary, the pressure and current profiles, the
-volume-averaged field strength and the number of field periods, so it also predicts
-the loss fraction of a design that is not in the data. The boundary is given as
+volume-averaged field strength and the number of field periods, so it can also predict
+the loss fraction of a *new* design that is not in the data. The boundary is given as
 `boundary_xyz`, a `(41, 41, 3)` array of Cartesian points on one field period of the
-boundary surface, indexed $(\phi, \theta, xyz)$. Build it with a
+boundary surface, indexed $(\phi, \theta, xyz)$. Describe the boundary with a
 [simsopt](https://simsopt.readthedocs.io) `SurfaceRZFourier` whose quadrature points
 are 41 toroidal angles over one field period and 41 poloidal angles, uniformly spaced
-and without the endpoint; its `gamma()` is then the array the model expects. The
-profiles are on the 15 radial points of `s1d`, from $s = 10^{-4}$ to 1.
+and without the endpoint. As shown below, `boundary_xyz = surface.gamma()` is then the
+correct input for the model. The profiles are evaluated at 15 radial points linearly
+spaced from $s = 10^{-4}$ to 1, the grid `s1d` of the data.
 
 Here the design is a rotating ellipse at the scale of ARIES-CS: three field periods,
-a major radius of 7.75 m, a minor radius of 1.7 m and a volume-averaged field of
+a major radius of 7.75 m, a minor radius of about 1.7 m and a volume-averaged field of
 5.86 T, in vacuum, so with zero pressure and current (`pip install simsopt`):
 
 ```python
@@ -79,7 +80,7 @@ surface.set_rc(0, 0, 7.75)  # major radius [m]
 surface.set_rc(1, 0, 1.7)   # minor radius [m]
 surface.set_zs(1, 0, 1.7)
 surface.set_rc(1, 1, 0.5)   # the rotating ellipse
-surface.set_zs(1, 1, 0.5)
+surface.set_zs(1, 1, -0.5)
 
 design = {
     "boundary_xyz": surface.gamma(),    # (41, 41, 3) [m]
@@ -92,11 +93,11 @@ print(f"predicted loss fraction: {model.predict(design):.3f}")
 ```
 
 ```text
-predicted loss fraction: 0.914
+predicted loss fraction: 0.272
 ```
 
-A plain rotating ellipse is far from an optimized stellarator, and the model predicts
-that it loses most of its alpha particles.
+A plain rotating ellipse is far from an optimized stellarator: the model predicts that
+it loses about a quarter of the alpha particles born on $s = 0.1$.
 
 The inputs are described in {class}`~boss_bench.models.loss_fraction.LossFractionModel`.
 Calling the model on tensors instead of
