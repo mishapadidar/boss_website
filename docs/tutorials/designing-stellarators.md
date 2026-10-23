@@ -86,7 +86,7 @@ design = model.sample(conditions, seed=0)
 
 {func}`~boss_bench.plotting.plot_device` draws it over the full torus. A generated
 boundary has no $\lvert B \rvert$ until its equilibrium is computed, so it is colored by
-the height $z$ of its points:
+the height $z$ of its points and shaded:
 
 ```python
 generated = {name: record[name] for name in ("nfp", "phi1d", "theta1d")}
@@ -95,6 +95,7 @@ bb.plot_device(generated)
 ```
 
 ```{figure} ../_static/tutorials/designing_stellarators.png
+:width: 60%
 :alt: A stellarator boundary generated with the properties of a low-loss test stellarator, colored by height
 ```
 
