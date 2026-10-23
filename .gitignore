@@ -1,6 +1,7 @@
 .venv/
 venv/
 docs/_build/
+docs/_build.new/
 .cache/
 __pycache__/
 .DS_Store

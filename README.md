@@ -31,10 +31,14 @@ and open `docs/_build/html/index.html`.
 For live reload while editing: `pip install sphinx-autobuild` and run
 `sphinx-autobuild docs docs/_build/html`.
 
-Rebuild from scratch (`rm -rf docs/_build` first) before publishing. An
-incremental build only rewrites the pages whose source changed, so the other
+In the live checkout on the Flatiron file system, `docs/_build/html` *is* the live
+site (see [Deploying](#deploying)), so preview there into another folder instead,
+e.g. `sphinx-build -b html docs /tmp/boss-preview`.
+
+An incremental build only rewrites the pages whose source changed, so the other
 pages keep an old sidebar, deleted pages stay in the output, and edits to
-`docs/_static/` alone are not copied.
+`docs/_static/` alone are not copied. Publishing therefore always builds from
+scratch.
 
 ## Layout
 
@@ -102,18 +106,27 @@ documentation always matches the release that accompanies the paper.
 
 ## Deploying
 
-The Flatiron web server serves https://boss.flatironinstitute.org/ straight from
-`docs/_build/html` of this checkout on the Flatiron file system, so publishing is
-rebuilding that folder. Pull `main`, then, with the venv active, rebuild from scratch:
+The live site, https://boss.flatironinstitute.org/, is served by the Flatiron web
+server straight from `docs/_build/html` of the checkout at
+`/mnt/home/mpadidar/code/ml/boss_website` on the Flatiron file system. Whatever is in
+that folder is live.
+
+The package pages document the `boss-bench` installed in that checkout's venv, which
+is the release on PyPI (`pip install boss-bench==1.0.0`). After a new release,
+upgrade it there and update the pin in `.github/workflows/build.yml`.
+
+To publish, pull `main` and build from scratch into a new folder, with warnings as
+errors; the new folder replaces the live one only if the build succeeds, so the site
+never goes down or shows a broken build:
 
 ```bash
+cd /mnt/home/mpadidar/code/ml/boss_website
+source venv/bin/activate
 git pull
-rm -rf docs/_build
-sphinx-build -b html docs docs/_build/html
+rm -rf docs/_build.new
+sphinx-build -W --keep-going -b html docs docs/_build.new/html \
+    && rm -rf docs/_build && mv docs/_build.new docs/_build
 ```
-
-The package pages come from the `boss-bench` installed in the venv, so install the
-released version, or set `BOSS_PACKAGE_SRC` to a checkout of the version to document.
 
 GitHub Actions (`.github/workflows/build.yml`) builds the site on every push and pull
 request with warnings as errors, as a check; it does not deploy.
