@@ -1,6 +1,7 @@
 # The BoSS: a benchmark of stellarator simulations
 
 [Download Data](download.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
+[Download Models](download-models.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
 [Data Explorer](data-explorer.md){.sd-btn .sd-btn-primary .sd-shadow-sm}
 
 The Benchmark of Stellarator Simulations (BoSS) is a database of stellarator
