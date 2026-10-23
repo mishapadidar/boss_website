@@ -46,6 +46,30 @@ print(f"{len(zeta)} strike points, predicted loss fraction {loss_fraction:.3f}")
 1273 strike points, predicted loss fraction 0.255
 ```
 
+{func}`~boss_bench.heat_flux.lost_particles` gives the true strike points, which we
+scatter next to the predicted ones, colored by energy:
+
+```python
+import matplotlib.pyplot as plt
+
+true = bb.lost_particles(
+    record["confinement_time"], record["t_max"], record["s_init"],
+    record["zeta_end"], record["theta_end"], s0=0.1)
+clouds = {"true": true[:3], "predicted": (zeta, theta, energy)}
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
+for ax, (name, (z, t, e)) in zip(axes, clouds.items()):
+    points = ax.scatter(z, t, c=e, s=2, cmap="jet", vmin=0, vmax=3.5)
+    ax.set_title(f"{name} strike points, $s_0$ = 0.1")
+    ax.set_xlabel(r"Boozer $\zeta$")
+axes[0].set_ylabel(r"Boozer $\theta$")
+fig.colorbar(points, ax=axes, label="energy [MeV]")
+```
+
+```{figure} ../_static/tutorials/using_heat_flux_model_strike_points.png
+:alt: True and predicted strike points of the particles born on s0 = 0.1, colored by energy
+```
+
 {func}`~boss_bench.heat_flux.binned_heat_flux` turns strike points into the heat flux
 on the boundary, in MeV/m² per launched particle, binned over one field period:
 
@@ -77,16 +101,15 @@ heat-flux benchmark, {func}`~boss_bench.heat_flux.heat_flux_metrics`, scores.
 
 ## A new design
 
-The model also predicts the strike points of a design that is not in the data. As in
+The model can also predict the strike points of a design that is not in the data. As in
 [Using the loss-fraction surrogate](using-loss-fraction-surrogate.md), the boundary is
 `boundary_xyz = surface.gamma()` of a simsopt `SurfaceRZFourier` with 41 × 41
 quadrature points over one field period, and the profiles are evaluated at 15 radial
 points linearly spaced from $s = 10^{-4}$ to 1. The model also needs the rotational
-transform; here it is a zero-shear profile, $\iota = 0.81$ on every surface. The design
+transform; here we use a zero-shear profile, $\iota = 0.81$ on every surface. The design
 is a rotating ellipse at the scale of ARIES-CS, in vacuum (`pip install simsopt`):
 
 ```python
-import matplotlib.pyplot as plt
 import numpy as np
 from simsopt.geo import SurfaceRZFourier
 
@@ -119,16 +142,22 @@ print(f"{len(zeta)} strike points, predicted loss fraction {loss_fraction:.3f}")
 
 {func}`~boss_bench.heat_flux.binned_heat_flux` divides by the area of each bin on the
 boundary, which it computes from the Boozer coordinates of the boundary (`R_boozer`,
-`Z_boozer` and `nu_boozer`, from booz_xform). Without them, we plot the energy that the
-strike points deposit in each bin, with the field periods folded into one:
+`Z_boozer` and `nu_boozer`, from booz_xform). Without computing the Boozer coordinates,
+we plot the energy that the strike points deposit in each bin, with the field periods
+folded into one, next to the strike points themselves:
 
 ```python
-plt.figure(figsize=(5, 3.6))
 folded = zeta % (2 * np.pi / nfp)  # the field periods folded into one
-plt.hist2d(folded, theta, bins=32, weights=energy, cmap="YlOrRd")
-plt.colorbar(label="energy of the strike points [MeV]")
-plt.xlabel(r"Boozer $\zeta$ (one field period)")
-plt.ylabel(r"Boozer $\theta$")
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+h = axes[0].hist2d(folded, theta, bins=32, weights=energy, cmap="YlOrRd")
+fig.colorbar(h[3], ax=axes[0], label="energy of the strike points [MeV]")
+axes[0].set_xlabel(r"Boozer $\zeta$ (one field period)")
+points = axes[1].scatter(
+    zeta, theta, c=energy, s=2, cmap="jet", vmin=0, vmax=3.5)
+fig.colorbar(points, ax=axes[1], label="energy [MeV]")
+axes[1].set_xlabel(r"Boozer $\zeta$")
+for ax in axes:
+    ax.set_ylabel(r"Boozer $\theta$")
 ```
 
 ```{figure} ../_static/tutorials/using_heat_flux_model_new_design.png

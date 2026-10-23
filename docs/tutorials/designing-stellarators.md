@@ -26,10 +26,11 @@ The model is conditioned on properties the design should have, given by the name
 BoSS fields and in their units: the number of field periods `nfp`, the `loss_fraction`
 of the alpha particles born on $s = 0.1$, the toroidal flux `toroidal_flux_edge`, the
 `minor_radius`, the `aspect_ratio`, the minimum field strength `min_modB`, the
-`mirror_ratio`, the `pressure` and `iota` profiles, and `vmec_ncurr`, which says
-whether the equilibrium is computed with the $\iota$ (0) or the current profile (1).
+`mirror_ratio`, the `pressure` and `iota` profiles, and `vmec_ncurr`, a boolean which
+says whether the equilibrium is computed with the $\iota$ (0) or the current profile (1).
 
-Good designs come from realistic conditions with a low loss fraction. Download
+Good designs come from realistic conditions with a low loss fraction. We use the
+conditions of devices from the test set with a low loss fraction. Download
 `confinement_data_test_split_00000.hdf5` from the [Download Data](../download.md) page
 into a folder, here `BoSS/`, and take the conditions of the first stellarator of the
 test split that loses less than 10% of its alpha particles:
@@ -84,8 +85,8 @@ design = model.sample(conditions, seed=0)
 ```
 
 {func}`~boss_bench.plotting.plot_device` draws it over the full torus. A generated
-boundary has no $\lvert B \rvert$ until its equilibrium is computed, so it is drawn in
-one color:
+boundary has no $\lvert B \rvert$ until its equilibrium is computed, so it is colored by
+the height $z$ of its points:
 
 ```python
 generated = {name: record[name] for name in ("nfp", "phi1d", "theta1d")}
@@ -94,7 +95,7 @@ bb.plot_device(generated)
 ```
 
 ```{figure} ../_static/tutorials/designing_stellarators.png
-:alt: A stellarator boundary generated with the properties of a low-loss test stellarator
+:alt: A stellarator boundary generated with the properties of a low-loss test stellarator, colored by height
 ```
 
 To ask for a different design, change the conditions, for example a lower
