@@ -17,7 +17,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 OUT = pathlib.Path(__file__).resolve().parents[1] / "docs" / "_static" / "overview"
-QS_BINS = np.arange(0, 1.051, 0.025)
+QS_BINS = np.logspace(-5, 0, 41)      # the error spans five decades, so log bins on a log axis
 IOTA_BINS = np.arange(-1.5, 2.001, 0.1)
 AR_BINS = np.arange(1.5, 13.01, 0.5)
 
@@ -97,6 +97,8 @@ def figure(t, mode):
     ax = axes[1]
     hist(ax, theme, t["sqrt_boozer_qs_error_mean"], QS_BINS)
     panel(ax, theme, "Quasi-symmetry error", r"$\sqrt{f_\mathrm{QS}}$, mean over $s$")
+    ax.set_xscale("log")
+    ax.set_xticks([1e-4, 1e-2, 1])
 
     ax = axes[2]
     hist(ax, theme, t["aspect_ratio"], AR_BINS)
