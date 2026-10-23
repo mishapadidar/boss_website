@@ -5,8 +5,8 @@ It is built with [Sphinx](https://www.sphinx-doc.org/) and the
 [sphinx-book-theme](https://sphinx-book-theme.readthedocs.io/) (the same theme and
 settings as the [DeepHyper docs](https://deephyper.readthedocs.io), with a
 simsopt-style left-only sidebar), with pages written
-in Markdown ([MyST](https://myst-parser.readthedocs.io/)), and deployed to
-GitHub Pages.
+in Markdown ([MyST](https://myst-parser.readthedocs.io/)), and served at
+https://boss.flatironinstitute.org/ from the Flatiron file system.
 
 ## Preview locally
 
@@ -102,15 +102,18 @@ documentation always matches the release that accompanies the paper.
 
 ## Deploying
 
-Every push to `main` builds the site with warnings as errors and deploys it
-through `.github/workflows/deploy.yml`. Pull requests are built but not
-deployed. One-time setup: **Settings → Pages → Build and deployment → Source:
-GitHub Actions**.
+The Flatiron web server serves https://boss.flatironinstitute.org/ straight from
+`docs/_build/html` of this checkout on the Flatiron file system, so publishing is
+rebuilding that folder. Pull `main`, then, with the venv active, rebuild from scratch:
 
-### Custom domain
+```bash
+git pull
+rm -rf docs/_build
+sphinx-build -b html docs docs/_build/html
+```
 
-1. Add `html_baseurl = "https://boss.example.org/"` and
-   `html_extra_path = ["CNAME"]` to `docs/conf.py`, with a `docs/CNAME` file
-   containing the domain.
-2. Add a DNS `CNAME` record pointing the domain at `<github-user-or-org>.github.io`.
-3. Under **Settings → Pages**, enter the domain and turn on **Enforce HTTPS**.
+The package pages come from the `boss-bench` installed in the venv, so install the
+released version, or set `BOSS_PACKAGE_SRC` to a checkout of the version to document.
+
+GitHub Actions (`.github/workflows/build.yml`) builds the site on every push and pull
+request with warnings as errors, as a check; it does not deploy.

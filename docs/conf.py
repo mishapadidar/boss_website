@@ -17,7 +17,6 @@ extensions = [
     "sphinx_design",
     "sphinx_copybutton",
     "sphinx.ext.mathjax",
-    "sphinx.ext.githubpages",   # writes .nojekyll for GitHub Pages
 ]
 
 source_suffix = {".md": "markdown"}
