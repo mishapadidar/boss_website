@@ -31,12 +31,12 @@ Install it with its models:
 pip install "boss-bench[models]"
 ```
 
-Then this downloads the PyTorch files of one model into a folder:
+Then this downloads one model into a folder, with its ONNX files if `onnx=True`:
 
 ```python
 from boss_bench import models
 
-models.download("heat_flux", "BoSS-models/heat_flux")
+models.download("heat_flux", "BoSS-models/heat_flux", onnx=True)
 ```
 
 The models can also be downloaded directly from Hugging Face, with its command line:

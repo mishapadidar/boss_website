@@ -100,7 +100,7 @@ A plain rotating ellipse is far from an optimized stellarator: the model predict
 it loses about a quarter of the alpha particles born on $s = 0.1$.
 
 The inputs are described in {class}`~boss_bench.models.loss_fraction.LossFractionModel`.
-Calling the model on tensors instead of
+Calling the model on PyTorch tensors instead of
 {meth}`~boss_bench.models.loss_fraction.LossFractionModel.predict` gives the prediction
 with gradients, for example with respect to the boundary, for gradient-based
 optimization.
