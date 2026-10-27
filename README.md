@@ -74,12 +74,11 @@ The numbers on `docs/data/overview.md` and its histograms come from the release
 files on the cluster. Refresh them when the database grows:
 
 ```bash
-ssh rusty 'source ~/code/ml/env_ml_fast_ion/bin/activate; python -' < scripts/collect_stats.py
-scp 'rusty:ceph/artemiss/web/boss_site_{stats.npz,files.json}' .
-python scripts/make_overview_figures.py boss_site_stats.npz boss_site_files.json
+ssh rusty 'source ~/code/ml/env_ml_fast_ion/bin/activate; python ~/code/ml/boss_website/scripts/collect_stats.py'
+python scripts/make_overview_figures.py overview_data/boss_site_stats.npz overview_data/boss_site_files.json
 ```
 
-The last command rewrites the histograms and prints the numbers quoted on the
+The first command writes `overview_data/` (not committed); the second rewrites the histograms and prints the numbers quoted on the
 page (counts per source, files, sizes), which are then updated by hand.
 
 ## Package documentation

@@ -4,7 +4,7 @@ Reads the per-configuration table written by collect_stats.py (run on the cluste
 and writes docs/_static/overview/distributions-{light,dark}.svg. It also prints the
 numbers quoted on the overview page, so they can be updated when the database grows.
 
-    python scripts/make_overview_figures.py boss_site_stats.npz boss_site_files.json
+    python scripts/make_overview_figures.py overview_data/boss_site_stats.npz overview_data/boss_site_files.json
 """
 import json
 import pathlib

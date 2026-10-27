@@ -6,3 +6,4 @@ docs/_build.new/
 __pycache__/
 .DS_Store
 docs/api/
+overview_data/

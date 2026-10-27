@@ -3,15 +3,15 @@
 Writes one row per configuration (source, split, scalar properties, the mean of the iota and
 quasi-symmetry error profiles, and the loss fraction of the particles born on each surface)
 to boss_site_stats.npz, and the size and contents of every file to boss_site_files.json,
-both in OUT (on CephFS, so they can be copied from any login node). Run on rusty, then plot with
+both in overview_data/ of this checkout (not committed). Run on rusty, then plot with
 make_overview_figures.py (see README.md).
 """
-import glob, json, os
+import glob, json, os, pathlib
 import h5py
 import numpy as np
 
 ROOT = "/mnt/home/mpadidar/ceph/artemiss/bossbench"
-OUT = "/mnt/home/mpadidar/ceph/artemiss/web"
+OUT = pathlib.Path(__file__).resolve().parents[1] / "overview_data"
 SCALARS = ["nfp", "aspect_ratio", "major_radius", "minor_radius", "plasma_beta",
            "volume_avg_modB", "mirror_ratio", "enforce_vacuum", "stellsym"]
 PROFILES = ["iota", "sqrt_boozer_qs_error"]
@@ -61,6 +61,7 @@ for path in sorted(glob.glob(f"{ROOT}/trajectories/*.hdf5")):
                   "n_orbits": n_orbits, "n_samples": n_samples, "uuids": uuids})
 print("trajectory files", sum(f["kind"] == "trajectory" for f in files), flush=True)
 
+OUT.mkdir(exist_ok=True)
 np.savez_compressed(f"{OUT}/boss_site_stats.npz",
                     **{k: np.asarray(v) for k, v in rows.items()})
 json.dump(files, open(f"{OUT}/boss_site_files.json", "w"))
