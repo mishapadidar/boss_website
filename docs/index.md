@@ -55,31 +55,27 @@ pip install .
 
 See the [package documentation](package.md) for how to use it.
 
-<!-- Restore once the paper is out.
-
 ## Citing the BoSS
 
 If you find this project useful for your research, please consider citing:
 
-- A. Author, B. Author, and C. Author. *The BoSS: a benchmark of stellarator
-  simulations.* 2026. [doi:XX.XXXXX/XXXXX](https://doi.org/XX.XXXXX/XXXXX),
-  [arXiv:XXXX.XXXXX](https://arxiv.org/abs/XXXX.XXXXX).
+- M. Padidar, T. Huang, M. Goldstein, M. Czekanski, and J. Soules. *Generative
+  modeling for fusion: a large-scale benchmark of stellarator fast-ion simulations.*
+  2026. [arXiv:2610.37910](https://arxiv.org/abs/2610.37910).
 
 The BibTeX entry is below.
 
 ```bibtex
-@unpublished{boss,
-  author       = {Author, A. and Author, B. and Author, C.},
-  title        = {The {BoSS}: a benchmark of stellarator simulations},
-  eprint       = {XXXX.XXXXX},
-  eprinttype   = {arxiv},
-  eprintclass  = {physics.plasm-ph},
-  year         = 2026,
-  doi          = {XX.XXXXX/XXXXX},
+@misc{padidar2026generativemodelingfusionlargescale,
+      title={Generative modeling for fusion: a large-scale benchmark of stellarator fast-ion simulations},
+      author={Misha Padidar and Teresa Huang and Mark Goldstein and Michael Czekanski and Jeffrey Soules},
+      year={2026},
+      eprint={2610.37910},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2610.37910},
 }
 ```
-
--->
 
 ## License
 
