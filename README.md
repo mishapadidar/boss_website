@@ -56,6 +56,9 @@ docs/
   _static/logo/          stellarator image from the ARTEMISS logo
   _templates/            sidebar template (pages expand into their sections), GitHub link
                          with star and fork counts in the header (repo-stats.html)
+viewer/                  the Data Explorer app (built files from Jeff Soules), copied to
+                         /viewer/ of the site by docs/conf.py, with /viewer/artemiss linked
+                         to the release files on ceph (see "Data Explorer" there)
 icons/                   old ARTEMISS logo files (not used by the site)
 legacy_mkdocs/           the previous MkDocs Material version, kept for reference
 scripts/                 regenerate the database numbers and figures (see below)

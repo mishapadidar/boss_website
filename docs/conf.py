@@ -177,5 +177,60 @@ def _add_sidebar_nav(app, pagename, templatename, context, doctree):
     context["boss_sidebar_nav"] = boss_sidebar_nav
 
 
+# -- Data Explorer ------------------------------------------------------------
+# The Data Explorer is a separate React app, built by Jeff Soules and committed as
+# built files in viewer/ at the top of the repository. It is copied to /viewer/ of
+# the site at the end of every build. The app has its own address compiled in (Vite
+# `base` and the router `basename`), which must be /viewer; older builds of his used
+# /~jsoules/boss, which is rewritten to /viewer on the way out. The build stops if
+# the app points to any other address, since it would then show a blank page.
+#
+# The app loads its data from /viewer/artemiss/, a symlink to the release files on
+# ceph, created here when that folder exists (it does not on GitHub Actions).
+VIEWER_SRC = pathlib.Path(__file__).parent.parent / "viewer"
+VIEWER_URL = "/viewer"
+VIEWER_REWRITE = {"/~jsoules/boss": VIEWER_URL}
+VIEWER_DATA = pathlib.Path("/mnt/home/mpadidar/ceph/artemiss")
+
+
+def _copy_viewer(app, exception):
+    import re
+    import shutil
+
+    if exception is not None or app.builder.format != "html":
+        return
+    out = pathlib.Path(app.outdir) / VIEWER_URL.strip("/")
+    data_link = out / "artemiss"
+    if data_link.is_symlink():
+        data_link.unlink()  # removes only the link, never the data it points to
+    if out.exists():
+        shutil.rmtree(out)
+    # symlinks (e.g. Jeff's overview/index.html) point outside the repo; leave them out
+    shutil.copytree(VIEWER_SRC, out, symlinks=True,
+                    ignore=lambda d, names: [n for n in names if os.path.islink(os.path.join(d, n))])
+    bundle = []
+    for path in out.rglob("*"):
+        if path.suffix not in {".html", ".js", ".css"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        new = text
+        for old, repl in VIEWER_REWRITE.items():
+            new = new.replace(old, repl)
+        if new != text:
+            path.write_text(new, encoding="utf-8")
+        if path.suffix == ".js":
+            bundle.append(new)
+    basenames = set(re.findall(r"basename:[`'\"]([^`'\"]*)[`'\"]", "".join(bundle)))
+    if basenames != {VIEWER_URL}:
+        raise RuntimeError(
+            f"the Data Explorer in {VIEWER_SRC} is built for {sorted(basenames) or 'no'} "
+            f"router basename, not {VIEWER_URL!r}, so it would show a blank page at "
+            f"{VIEWER_URL}/. Rebuild it with Vite base '{VIEWER_URL}/' and router basename "
+            f"'{VIEWER_URL}', or add its address to VIEWER_REWRITE in docs/conf.py.")
+    if VIEWER_DATA.is_dir():
+        (out / "artemiss").symlink_to(VIEWER_DATA)
+
+
 def setup(app):
     app.connect("html-page-context", _add_sidebar_nav)
+    app.connect("build-finished", _copy_viewer)
